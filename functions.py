@@ -1,11 +1,10 @@
 ## Modules
-from os import listdir, walk, getenv
+from os import listdir, walk, getenv,remove
 from random import choice
 from subprocess import run
-
 import toml
-
 from conf import *
+from webscraper import Downloader
 
 ## Config related Functions ##========================================================================================
 
@@ -13,28 +12,6 @@ from conf import *
 def write_defaults():
     with open(config_path, "w") as f:
         f.write(default_config)
-
-
-def resetHistory():
-    with open(history_path, "r") as f:
-        last = f.readlines()[-1]
-    with open(history_path, "w") as fl:
-        fl.write(last)
-
-
-def appendHistory(p):
-    try:
-        with open(history_path, "r") as fl:
-            a = fl.readlines()
-            last = a[-1]
-            if len(a) >= 50:
-                resetHistory()
-    except:
-        last = ""
-    with open(history_path, "a") as f:
-        if p + "\n" != last:
-            f.write(p + "\n")
-
 
 def setConf(conf):
     with open(config_path, "w") as f:
@@ -44,6 +21,40 @@ def getConf(section,var):
     with open(config_path,"r") as f:
         config=toml.load(f)
     return config[section][var]
+
+def resetHistory(index):
+    with open(history_path, "r") as f:
+        last = f.readlines()[index]
+    with open(history_path, "w") as fl:
+        fl.write(last)
+
+def resetDownloaded():
+    with open(history_path, "r") as f:
+        hist=f.readlines()
+        lastUsed=hist[int(getConf("internal","wall_index"))]
+
+    toRemove=[]
+    for img in listdir(getConf("internet","wallpaper_save_directory")):
+        if img in lastUsed:
+            pass
+        else:
+            toRemove.append(path.join(getConf("internet","wallpaper_save_directory"),img))
+    for i in toRemove:
+        remove(i)
+
+
+def appendHistory(p):
+    try:
+        with open(history_path, "r") as fl:
+            a = fl.readlines()
+            last = a[-1]
+            if len(a) >= int(getConf("wallpaper","wallpaper_history_limit")):
+                resetHistory(int(getConf("internal","wall_index")))
+    except:
+        last = ""
+    with open(history_path, "a") as f:
+        if p + "\n" != last:
+            f.write(p + "\n")
 
 
 ## Wallpaper related functions ##========================================================================================
@@ -67,15 +78,36 @@ def filterWall(p):
 
 
 def chooseRandom(directory):
-    allItems = []
-    for dirpath, _, filenames in walk(directory):
-        for filename in filenames:
-            allItems.append(path.join(dirpath, filename))
-    return choice(allItems)
+    if path.exists(directory):
+        allItems = []
+        for dirpath, _, filenames in walk(directory):
+            for filename in filenames:
+                allItems.append(path.join(dirpath, filename))
+        return choice(allItems)
+    else:
+        return None
 
 
-def setRandom(config):
-    setWall(chooseRandom(config["wallpaper"]["wallpaper_directory"]))
+def setRandom(config,use_internet=False):
+    if use_internet:
+        q=getConf("internet","image_query")
+        if q=="":
+            d=Downloader("landscape")
+            d.downloadRandom(count=1)
+            setWall(d.images[0])
+        else:
+            d=Downloader(q)
+            d.downloadRandom(count=1)
+            setWall(d.images[0])
+        
+    else:
+        randomWall=chooseRandom(config["wallpaper"]["wallpaper_directory"])
+        if randomWall==None:
+            setRandom(config,use_internet=True)
+        else:
+            setWall(randomWall)
+            config["internal"]["wall_index"]=-1
+            setConf(config)
 
 
 def setWall(p, save=True):
@@ -87,7 +119,7 @@ def setWall(p, save=True):
         options = getConf("swww","options")
         run(f"swww img {p} {options}",shell=True,capture_output=False)
 
-    if save:
+    if save and getConf("wallpaper","remember_wallpaper"):
         appendHistory(p)
     print("Done! Wallpaper has been set:)")
 

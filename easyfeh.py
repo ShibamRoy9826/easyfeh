@@ -8,27 +8,15 @@
 By Shibam Roy
 """
 
+## Modules ##=========================================================================================
+# import traceback
 from os import mkdir
 from sys import argv
 
 import toml
 
 from conf import *
-import traceback
-## Modules ##=========================================================================================
 from functions import *
-
-## Create Config if it doesn't exist ##==============================================================
-
-if "easyfeh" not in listdir(config_directory):
-    mkdir(config_directory + "/easyfeh")
-else:
-    if not path.isfile(config_path):
-        write_defaults()
-    if not path.isfile(path.join(config_directory, "history.txt")):
-        with open(path.join(config_directory, "history.txt"), "w") as f:
-            pass
-
 
 ## Loading Configuration ##========================================================================
 with open(config_path, "r") as f:
@@ -53,48 +41,65 @@ elif len(options) == 0:
     setWall(img_path)
 else:
     if "-restore" in options:
-        with open(path.join(config_directory,"history.txt"),'r') as f:
-            walls=f.readlines()
-            setWall(walls[config["internal"]["wall_index"]],save=False)
-            print("Set to last used wallpaper!")
-        
+        try:
+            with open(path.join(config_directory, "history.txt"), "r") as f:
+                walls = f.readlines()
+                p=walls[config["internal"]["wall_index"]]
+                if not path.isfile(p):
+                    raise FileNotFoundError
+                setWall(p, save=False)
+                print("Set to last used wallpaper!")
+        except:
+            if getConf("internet","use_from_internet"):
+                setRandom(config,use_internet=True)
+            else:
+                setRandom(config)
+
+
     if "-reset-hist" in options:
-        resetHistory()
+        resetHistory(getConf("internal", "wall_index"))
     if "-reset-conf" in options:
         write_defaults()
+    if "-reset-walls" in options:
+        resetDownloaded()
     if "-prev" in options:
-        with open(history_path, "r") as f:
-            walls = f.readlines()
-            try:
-                newIndex=int(config["internal"]["wall_index"]) - 1
-                config["internal"]["wall_index"]=newIndex
+        try:
+            with open(history_path, "r") as f:
+                walls = f.readlines()
+                newIndex = int(config["internal"]["wall_index"]) - 1
+                config["internal"]["wall_index"] = newIndex
                 setConf(config)
                 toSet = walls[newIndex]
-                setWall(toSet,save=False)
-            except:
-                print(
-                    "No previous wallpaper found. (Maybe already on oldest, Check history!)"
-                )
+                setWall(toSet, save=False)
+        except:
+            print(
+                "No previous wallpaper found. (Maybe already on oldest, Check history!)"
+            )
     if "-next" in options:
-        with open(history_path, "r") as f:
-            walls = f.readlines()
-            try:
-                newIndex=int(config["internal"]["wall_index"]) + 1
-                if newIndex!=0:
-                    config["internal"]["wall_index"]=newIndex
+        try:
+            with open(history_path, "r") as f:
+                walls = f.readlines()
+                newIndex = int(config["internal"]["wall_index"]) + 1
+                if newIndex != 0:
+                    config["internal"]["wall_index"] = newIndex
                     setConf(config)
                     toSet = walls[newIndex]
-                    setWall(toSet,save=False)
+                    setWall(toSet, save=False)
                 else:
                     print(
                         "No next wallpaper found. (Maybe already on latest, Check history!)"
                     )
-            except:
-                print(
-                    "No next wallpaper found. (Maybe already on latest, Check history!)"
-                )
-    if "-random" in options:
-        setRandom(config)
+        except:
+            print(
+                "No next wallpaper found. (Maybe already on latest, Check history!)"
+            )
+    if ("-random" in options) and ("-use-internet" in options):
+        setRandom(config, use_internet=True)
+    elif "-random" in options:
+        if getConf("internet","use_from_internet"):
+            setRandom(config,use_internet=True)
+        else:
+            setRandom(config)
 
     if "-show-hist" in options:
         printHistory()
