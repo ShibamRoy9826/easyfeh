@@ -14,14 +14,16 @@ default_config = f"""
 wallpaper_directory= "/home/{username}/Pictures"
 random = false
 remember_wallpaper = true
-wallpaper_history = 50
+wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
 
 [internet]
 use_from_internet = false
-image_source = "unsplash" # For now this is the only option
+image_source = "unsplash" # "unsplash" or "wallhaven"
 wallpaper_save_directory = "/home/{username}/Pictures/easyfeh"
 image_query = "landscape" # Search for images you want, default is "landscape" 
-shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result)
+shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result) , only valid for unsplash results
+wallhaven_purity = "sfw" # Only if wallhaven is selected as image source. Options: "sfw", "nsfw"
+use_saved = true # Also includes already downloaded images from the internet when -random is called
 
 [feh]
 options = "--bg-fill"

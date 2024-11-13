@@ -44,11 +44,12 @@ else:
         try:
             with open(path.join(config_directory, "history.txt"), "r") as f:
                 walls = f.readlines()
-                p=walls[config["internal"]["wall_index"]]
+                p=walls[config["internal"]["wall_index"]].replace("\n","")
                 if not path.isfile(p):
                     raise FileNotFoundError
-                setWall(p, save=False)
-                print("Set to last used wallpaper!")
+                else:
+                    setWall(p, save=False)
+                    print("Set to last used wallpaper!")
         except:
             if getConf("internet","use_from_internet"):
                 setRandom(config,use_internet=True)
@@ -93,7 +94,7 @@ else:
             print(
                 "No next wallpaper found. (Maybe already on latest, Check history!)"
             )
-    if ("-random" in options) and ("-use-internet" in options):
+    elif ("-random" in options) and ("-use-internet" in options):
         setRandom(config, use_internet=True)
     elif "-random" in options:
         if getConf("internet","use_from_internet"):

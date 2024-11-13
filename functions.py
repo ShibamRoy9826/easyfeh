@@ -22,11 +22,21 @@ def getConf(section,var):
         config=toml.load(f)
     return config[section][var]
 
-def resetHistory(index):
-    with open(history_path, "r") as f:
-        last = f.readlines()[index]
-    with open(history_path, "w") as fl:
-        fl.write(last)
+def returnSource():
+    if getConf("internet","image_source")=="unsplash":
+        return 0
+    else:
+        return 1
+
+def resetHistory(index,nothing=False):
+    if nothing:
+        with open(history_path, "w") as fl:
+            fl.write('')
+    else:
+        with open(history_path, "r") as f:
+            last = f.readlines()[index]
+        with open(history_path, "w") as fl:
+            fl.write(last)
 
 def resetDownloaded():
     with open(history_path, "r") as f:
@@ -49,8 +59,9 @@ def appendHistory(p):
             a = fl.readlines()
             last = a[-1]
             if len(a) >= int(getConf("wallpaper","wallpaper_history_limit")):
-                resetHistory(int(getConf("internal","wall_index")))
-    except:
+                resetHistory(int(getConf("internal","wall_index")),nothing=True)
+    except Exception as e:
+        print(e)
         last = ""
     with open(history_path, "a") as f:
         if p + "\n" != last:
@@ -77,31 +88,42 @@ def filterWall(p):
         return filtered
 
 
-def chooseRandom(directory):
+def chooseRandom(directory,more=[]):
+
+    allItems = []
     if path.exists(directory):
-        allItems = []
         for dirpath, _, filenames in walk(directory):
             for filename in filenames:
                 allItems.append(path.join(dirpath, filename))
+    for i in more:
+        if path.exists(i):
+            for dirpath, _, filenames in walk(i):
+                for filename in filenames:
+                    allItems.append(path.join(dirpath, filename))
+    if allItems!=[]:
         return choice(allItems)
     else:
         return None
-
 
 def setRandom(config,use_internet=False):
     if use_internet:
         q=getConf("internet","image_query")
         if q=="":
-            d=Downloader("landscape")
-            d.downloadRandom(count=1)
+            src=returnSource()
+            d=Downloader("landscape",source=returnSource())
+            d.download(count=1)
             setWall(d.images[0])
         else:
-            d=Downloader(q)
-            d.downloadRandom(count=1)
+            d=Downloader(q,source=returnSource())
+            d.download(count=1)
             setWall(d.images[0])
-        
     else:
-        randomWall=chooseRandom(config["wallpaper"]["wallpaper_directory"])
+        if config["internet"]["use_saved"]:
+            moreDirs=[config["internet"]["wallpaper_save_directory"]]
+        else:
+            moreDirs=[]
+
+        randomWall=chooseRandom(config["wallpaper"]["wallpaper_directory"],more=moreDirs)
         if randomWall==None:
             setRandom(config,use_internet=True)
         else:
