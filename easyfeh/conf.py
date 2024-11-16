@@ -82,19 +82,17 @@ Commands:
 
 ## Create Config if it doesn't exist ##==============================================================
 
-if "easyfeh" not in listdir(config_directory):
-    mkdir(config_directory + "/easyfeh")
-    if not path.isfile(config_path):
-        with open(config_path, "w") as f:
-            f.write(default_config)
-    if not path.isfile(path.join(config_directory, "history.txt")):
-        with open(path.join(config_directory, "history.txt"), "w") as f:
-            pass
+if not "easyfeh" in listdir(config_):
+    mkdir(config_+ "/easyfeh")
+    with open(config_path, "w") as f:
+        f.write(default_config)
+    with open(path.join(config_directory, "history.txt"), "w") as f:
+        pass
 
 else:
     if not path.isfile(config_path):
         with open(config_path, "w") as f:
             f.write(default_config)
-    if not path.isfile(path.join(config_directory, "history.txt")):
-        with open(path.join(config_directory, "history.txt"), "w") as f:
+    if not path.isfile(history_path):
+        with open(history_path, "w") as f:
             pass

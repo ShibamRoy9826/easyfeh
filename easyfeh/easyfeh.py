@@ -14,12 +14,10 @@ from sys import argv
 
 import toml
 
-from .conf import *
-from .functions import *
-from .conf_verif import *
+from conf import *
+from functions import *
 def main():
 ## Loading Configuration ##========================================================================
-    checkConf()
     with open(config_path, "r") as f:
         config = toml.load(f)
 
