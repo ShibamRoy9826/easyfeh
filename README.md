@@ -1,18 +1,23 @@
-# EasyFeh
+# EasyFeh 
 
 A straight-forward & user-friendly wrapper for [feh](https://github.com/derf/feh), written in Python :)
 
-
-## Features
+## Features 😎
 
 - A wallpaper history , allows you to move forward or backward in history
 - Highly customizable
 - Allows users to fetch wallpapers from [unsplash](https://unsplash.com/) and [wallhaven](https://wallhaven.cc/)
 - Also works in wayland but uses [swww](https://github.com/LGFae/swww) instead of feh
 
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+
 ## Dependencies
 
 The dependencies include: 
+
+- [feh](https://github.com/derf/feh)
+
+- [swww](https://github.com/LGFae/swww) (Optional, only if you're on wayland)
 
 - [beautifulsoup4](https://pypi.org/project/beautifulsoup4/)
 
@@ -22,14 +27,24 @@ The dependencies include:
 
 Although the dependencies will be automatically installed while installing the application, if you still want to install these dependencies manually, you can checkout the `requirements.txt` file. and run `pip install -r requirements.txt`
 
-
-## Installation
+<h2>
+    Installation <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/7b282ec6-fcc3-4600-90a7-2c3140549f58" width="30">
+</h2>
 
 If you're on Arch Linux, like me, then you can install it from the AUR:
 ```bash
 paru -S easyfeh
 ```
 Make sure to replace `paru` with whatever AUR helper you use.
+
+For other distros try (installs locally to the user):
+```bash
+python setup.py install --user
+```
+if you want to install it systemwide, you can try:
+```bash
+sudo python setup.py install
+```
 
 If your distro allows python package installation directly using pip,
 You can install EasyFeh by cloning this repository locally.
@@ -39,12 +54,14 @@ git clone https://github.com/ShibamRoy9826/easyfeh.git
 cd easyfeh
 pip install .
 ```
+That's it! read the usage of the commands and enjoy!
 
-
-## Usage/Examples
+<h2>
+    Usage <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/7b282ec6-fcc3-4600-90a7-2c3140549f58" width="30">
+</h2>
 
 Here's a list of all the commands
-```bash
+```text
 EasyFeh
 __________
 
@@ -78,11 +95,12 @@ Commands:
 ```
 
 
-## Configuration
+## Configuration 🛠️
 
 The configuration file for EasyFeh can be found at `$HOME/.config/easyfeh/config.toml`
 
 Its well-commented with explaination of each parameter. Here's the default configuration file of EasyFeh
+
 ```text
 [wallpaper]
 wallpaper_directory= "/home/{username}/Pictures"
@@ -117,16 +135,22 @@ options = ""
 # Current Wallpaper index in the history
 wall_index = -1
 ```
-## To-Do
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+
+## To-Do 🛠️
 - Easy to switch wallpaper collections/themes
 - Wallpaper effects (blur, dim ,etc..)
 - A rust variant of the same project :) (Might take some time, I am learning about rust now)
 
-## Known bugs
+## Known bugs 🐞
 - Get's the same wallpaper sometimes when it tries to set random wallpapers
 
-## Contributing
+## Contributing 🤝
 
 Everyone is welcome to contribute to the code!
 
 You can also raise an issue, or suggest any features that you think would be great :)
+
+> ✨ Please star this repository if you liked this project 😁
+
+
