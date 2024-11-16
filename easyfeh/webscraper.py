@@ -1,6 +1,6 @@
 import toml
 from requests import get
-from conf import *
+from .conf import *
 from bs4 import BeautifulSoup
 from re import sub
 from string import ascii_letters

@@ -14,8 +14,8 @@ from sys import argv
 
 import toml
 
-from conf import *
-from functions import *
+from .conf import *
+from .functions import *
 def main():
 ## Loading Configuration ##========================================================================
     with open(config_path, "r") as f:
