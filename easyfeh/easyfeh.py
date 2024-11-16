@@ -15,7 +15,7 @@ from sys import argv
 import toml
 
 from .conf import *
-from functions import *
+from .functions import *
 
 def main():
 ## Loading Configuration ##========================================================================

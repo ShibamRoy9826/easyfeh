@@ -5,7 +5,7 @@ from random import choice
 from subprocess import run
 import toml
 from .conf import *
-from webscraper import Downloader
+from .webscraper import Downloader
 
 ## Config related Functions ##========================================================================================
 
