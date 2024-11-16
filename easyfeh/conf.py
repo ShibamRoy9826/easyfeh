@@ -12,21 +12,28 @@ history_path = config_directory + "/history.txt"
 default_config = f"""
 [wallpaper]
 wallpaper_directory= "/home/{username}/Pictures"
-random = false
-remember_wallpaper = true
+random = false # sets random wallpapers from wallpaper_directory
+remember_wallpaper = true # Saves to history 
 wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
 
 [internet]
 use_from_internet = false
-image_source = "unsplash" # "unsplash" or "wallhaven"
+image_source = "unsplash" # "unsplash"(default) or "wallhaven"
 wallpaper_save_directory = "/home/{username}/Pictures/easyfeh"
 image_query = "landscape" # Search for images you want, default is "landscape" 
 shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result) , only valid for unsplash results
 wallhaven_purity = "sfw" # Only if wallhaven is selected as image source. Options: "sfw", "nsfw"
 use_saved = true # Also includes already downloaded images from the internet when -random is called
 
+[triggers]
+notify_on_change = false # sends a notification on wallpaper change
+command_on_change = false # runs a command on wallpaper change, you can use it to run scripts
+notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
+notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
+command = "" # Set only if command_on_change is turned on
+
 [feh]
-options = "--bg-fill"
+options = "--bg-fill" # Feh options
 
 [swww]
 # Only if you're using wayland
@@ -59,11 +66,18 @@ Commands:
     easyfeh [some_img_path]  -> Sets an image as wallpaper (supported formats : jpg, jpeg, png, pnm, tiff, bmp, gif)
     easyfeh -reset-hist      -> Resets the wallpaper history (Keeps the last used wallpaper)
     easyfeh -reset-walls     -> Deletes all wallpapers downloaded from internet
-    easyfeh -show-hist       -> Prints out the history
     easyfeh -reset-conf      -> WARNING! Deletes Existing configuration and resets to default (Take backups before running this!)
+    easyfeh -show-hist       -> Prints out the history
+    easyfeh -show-installed  -> Prints out all the wallpapers installed from internet (If any)
+    easyfeh -show-current    -> Prints out the path to the current wallpaper(last used, requires wallpaper history to be turned on)
+
+    easyfeh -download <amount>      -> Downloads wallpapers(Doesn't set them)
+    -query <query> -source <source>    Optional arguments : -query , -source
+                                       If not specified, it will check the configuration.
+                                       Available options for sources: unsplash, wallhaven
+
 
 ** The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.toml **
-** Please avoid using multiple options for now, it should work, but may be buggy        **
 """
 
 ## Create Config if it doesn't exist ##==============================================================
