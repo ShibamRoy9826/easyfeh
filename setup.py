@@ -12,12 +12,12 @@ def readRequirements():
 
 setup(
     name="easyfeh",
-    version="1.0.0",
+    version="0.1.0",
     description="An easy to use feh wrapper with cool features",
     author="Shibam Roy",
     author_email="shibamroy9826@gmail.com",
     url="https://github.com/ShibamRoy9826/easyfeh",
-    packages=find_packages(),  # Automatically finds and lists packages in `myapp/`
+    packages=find_packages(),  
     install_requires=readRequirements(),
     entry_points={
         "console_scripts": [
@@ -29,5 +29,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.6",  # Adjust based on compatibility
+    python_requires=">=3.6",  
 )

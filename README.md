@@ -25,8 +25,14 @@ Although the dependencies will be automatically installed while installing the a
 
 ## Installation
 
+If you're on Arch Linux, like me, then you can install it from the AUR:
+```bash
+paru -S easyfeh
+```
+Make sure to replace `paru` with whatever AUR helper you use.
 
-You can install EasyFeh by cloning this repository locally and install it using pip.
+If your distro allows python package installation directly using pip,
+You can install EasyFeh by cloning this repository locally.
 Here's the command:
 ```bash
 git clone https://github.com/ShibamRoy9826/easyfeh.git
