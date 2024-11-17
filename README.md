@@ -56,6 +56,50 @@ pip install .
 ```
 That's it! read the usage of the commands and enjoy!
 
+## Configuration 🛠️
+
+The configuration file for EasyFeh can be found at `$HOME/.config/easyfeh/config.toml`
+
+> [!NOTE]
+> Please configure the wallpaper_directory parameter, it will not work well otherwise, it doesn't have filetype checks yet, so it might pick up a non-image file as wallpaper when it tries to find a random wallpaper
+
+Its well-commented with explaination of each parameter. Here's the default configuration file of EasyFeh
+
+```text
+[wallpaper]
+wallpaper_directory= "/home/{username}/Pictures"
+random = false # sets random wallpapers from wallpaper_directory
+remember_wallpaper = true # Saves to history 
+wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
+
+[internet]
+use_from_internet = false
+image_source = "unsplash" # "unsplash"(default) or "wallhaven"
+wallpaper_save_directory = "/home/{username}/Pictures/easyfeh"
+image_query = "landscape" # Search for images you want, default is "landscape" 
+shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result) , only valid for unsplash results
+wallhaven_purity = "sfw" # Only if wallhaven is selected as image source. Options: "sfw", "nsfw"
+use_saved = true # Also includes already downloaded images from the internet when -random is called
+
+[triggers]
+notify_on_change = false # sends a notification on wallpaper change
+command_on_change = false # runs a command on wallpaper change, you can use it to run scripts
+notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
+notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
+command = "" # Set only if command_on_change is turned on
+
+[feh]
+options = "--bg-fill" # Feh options
+
+[swww]
+# Only if you're using wayland
+options = ""
+
+[internal]
+# Current Wallpaper index in the history
+wall_index = -1
+```
+
 <h2>
     Usage <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/7b282ec6-fcc3-4600-90a7-2c3140549f58" width="30">
 </h2>
@@ -94,50 +138,11 @@ Commands:
 
 ```
 
-
-## Configuration 🛠️
-
-The configuration file for EasyFeh can be found at `$HOME/.config/easyfeh/config.toml`
-
-Its well-commented with explaination of each parameter. Here's the default configuration file of EasyFeh
-
-```text
-[wallpaper]
-wallpaper_directory= "/home/{username}/Pictures"
-random = false # sets random wallpapers from wallpaper_directory
-remember_wallpaper = true # Saves to history 
-wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
-
-[internet]
-use_from_internet = false
-image_source = "unsplash" # "unsplash"(default) or "wallhaven"
-wallpaper_save_directory = "/home/{username}/Pictures/easyfeh"
-image_query = "landscape" # Search for images you want, default is "landscape" 
-shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result) , only valid for unsplash results
-wallhaven_purity = "sfw" # Only if wallhaven is selected as image source. Options: "sfw", "nsfw"
-use_saved = true # Also includes already downloaded images from the internet when -random is called
-
-[triggers]
-notify_on_change = false # sends a notification on wallpaper change
-command_on_change = false # runs a command on wallpaper change, you can use it to run scripts
-notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
-notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
-command = "" # Set only if command_on_change is turned on
-
-[feh]
-options = "--bg-fill" # Feh options
-
-[swww]
-# Only if you're using wayland
-options = ""
-
-[internal]
-# Current Wallpaper index in the history
-wall_index = -1
-```
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
 ## To-Do 🛠️
+- File type checks (Verification of files, if they are images or not)
+- Configuration verifier
 - Easy to switch wallpaper collections/themes
 - Wallpaper effects (blur, dim ,etc..)
 - A rust variant of the same project :) (Might take some time, I am learning about rust now)
