@@ -11,15 +11,13 @@ By Shibam Roy
 ## Modules ##=========================================================================================
 # import traceback # Occasionally for debugging
 from sys import argv
-
-import toml
-
 from .conf import *
 from .functions import *
+
 def main():
 ## Loading Configuration ##========================================================================
     with open(config_path, "r") as f:
-        config = toml.load(f)
+        config = load(f)
 
 ## Main Program ##======================================================================
 
@@ -53,9 +51,12 @@ def main():
                         setWall(p, save=False)
                         print("Set to last used wallpaper!")
             except:
+                print("File not found, ",end="")
                 if getConf("internet","use_from_internet"):
+                    print("fetching from internet")
                     setRandom(config,use_internet=True)
                 else:
+                    print("setting a random one")
                     setRandom(config)
 
             ran=True
@@ -89,10 +90,13 @@ def main():
                 with open(history_path, "r") as f:
                     walls = f.readlines()
                     newIndex = int(config["internal"]["wall_index"]) - 1
-                    config["internal"]["wall_index"] = newIndex
-                    setConf(config)
                     toSet = walls[newIndex]
-                    setWall(toSet, save=False)
+                    if path.isfile(toSet):
+                        setWall(toSet, save=False)
+                        config["internal"]["wall_index"] = newIndex
+                        setConf(config)
+                    else:
+                        print("Previous wallpaper doesn't exist anymore...")
             except:
                 print(
                     "No previous wallpaper found. (Maybe already on oldest, Check history!)"
@@ -107,7 +111,10 @@ def main():
                         config["internal"]["wall_index"] = newIndex
                         setConf(config)
                         toSet = walls[newIndex]
-                        setWall(toSet, save=False)
+                        if path.isfile(toSet):
+                            setWall(toSet, save=False)
+                        else:
+                            print("Next wallpaper doesn't exist anymore...")
                     else:
                         print(
                             "No next wallpaper found. (Maybe already on latest, Check history!)"
@@ -130,11 +137,11 @@ def main():
             printHistory()
             ran=True
 
-        if "-show-installed" in options:
+        if "-show-down" in options:
             listInstalled()
             ran=True
         
-        if "-show-current" in options:
+        if "-show-curr" in options:
             showCurrent()
             ran=True
         if "-download" in options:
@@ -175,8 +182,5 @@ def main():
             print("No such command found:(  , try running 'easyfeh -h'")
             
             
-
-
-
 if __name__=="__main__":
     main()

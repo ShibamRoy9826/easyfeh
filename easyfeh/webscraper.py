@@ -1,4 +1,3 @@
-import toml
 from requests import get
 from .conf import *
 from bs4 import BeautifulSoup
@@ -7,7 +6,7 @@ from string import ascii_letters
 from random import shuffle
 
 with open(config_path, "r") as f:
-    config = toml.load(f)
+    config = load(f)
 
 class Downloader:
     def __init__(self,query,source=0):

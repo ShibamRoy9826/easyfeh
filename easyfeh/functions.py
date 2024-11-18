@@ -2,12 +2,11 @@
 from os import listdir, walk, getenv,remove
 from random import choice
 from subprocess import run
-import toml
 from .conf import *
 from .webscraper import Downloader
 
-## Config related Functions ##========================================================================================
 
+## Config related Functions ##========================================================================================
 
 def write_defaults():
     with open(config_path, "w") as f:
@@ -15,11 +14,11 @@ def write_defaults():
 
 def setConf(conf):
     with open(config_path, "w") as f:
-        toml.dump(conf, f)
+        dump(conf, f)
 
 def getConf(section,var):
     with open(config_path,"r") as f:
-        config=toml.load(f)
+        config=load(f)
     return config[section][var]
 
 def returnSource():
@@ -84,34 +83,20 @@ def runOnChange():
 
 ## Wallpaper related functions ##========================================================================================
 
-def filterWall(p):
-    try:
-        allItems = listdir(p)
-    except:
-        allItems = []
-        print("Wallpaper folder doesn't exist!")
-    supportedFormats = ["jpg", "jpeg", "png", "pnm", "tiff", "bmp", "gif"]
-    if len(allItems) == 0:
-        return []
-    else:
-        filtered = []
-        for i in allItems:
-            if i.rsplit(".", 1)[1] in supportedFormats:
-                filtered.append(path.join(p, i))
-        return filtered
-
-
 def chooseRandom(directory,more=[]):
     allItems = []
     if path.exists(directory):
         for dirpath, _, filenames in walk(directory):
             for filename in filenames:
-                allItems.append(path.join(dirpath, filename))
+                if filename.endswith(tuple(supported_formats)):
+                    allItems.append(path.join(dirpath, filename))
     for i in more:
         if path.exists(i):
             for dirpath, _, filenames in walk(i):
                 for filename in filenames:
-                    allItems.append(path.join(dirpath, filename))
+                    if filename.endswith(tuple(supported_formats)):
+                        allItems.append(path.join(dirpath, filename))
+
     if allItems!=[]:
         return choice(allItems)
     else:
@@ -136,21 +121,27 @@ def setRandom(config,use_internet=False):
 
         randomWall=chooseRandom(config["wallpaper"]["wallpaper_directory"],more=moreDirs)
         if randomWall==None:
+            print("Found no proper images, fetching from the internet")
             setRandom(config,use_internet=True)
         else:
             setWall(randomWall)
             config["internal"]["wall_index"]=-1
             setConf(config)
 
-
 def setWall(p, save=True):
     p = path.abspath(p)
-    if getenv("XDG_SESSION_TYPE")=="x11":
-        options = getConf("feh","options") 
-        run(f"feh {options} {p}", shell=True, capture_output=False)
+
+
+    if getConf("other","enabled"):
+        cmd = getConf("other","cmd").replace(":f:",p)
+        run(f'{cmd}', shell=True,capture_output=False)
     else:
-        options = getConf("swww","options")
-        run(f"swww img {p} {options}",shell=True,capture_output=False)
+        if getenv("XDG_SESSION_TYPE")=="x11":
+            options = getConf("feh","options") 
+            run(f"feh {options} {p}", shell=True, capture_output=False)
+        else:
+            options = getConf("swww","options")
+            run(f"swww img {p} {options}",shell=True,capture_output=False)
 
     if save and getConf("wallpaper","remember_wallpaper"):
         appendHistory(p)

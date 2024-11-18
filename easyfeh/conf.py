@@ -2,7 +2,8 @@
 This file contains most of the variables that easyfeh uses
 """
 
-from os import getlogin, listdir, mkdir, path
+from os import getlogin, listdir, makedirs, mkdir, path
+from toml import load,dump
 
 username = getlogin()
 config_ = f"/home/{username}/.config"
@@ -39,6 +40,13 @@ options = "--bg-fill" # Feh options
 # Only if you're using wayland
 options = ""
 
+[other]
+enabled = false
+# If you want to use something other than feh or swww
+cmd = ""
+# Example: command -options :f: 
+#    :f: get's replaced by the image path
+
 [internal]
 # Current Wallpaper index in the history
 wall_index = -1
@@ -68,8 +76,8 @@ Commands:
     easyfeh -reset-walls     -> Deletes all wallpapers downloaded from internet
     easyfeh -reset-conf      -> WARNING! Deletes Existing configuration and resets to default (Take backups before running this!)
     easyfeh -show-hist       -> Prints out the history
-    easyfeh -show-installed  -> Prints out all the wallpapers installed from internet (If any)
-    easyfeh -show-current    -> Prints out the path to the current wallpaper(last used, requires wallpaper history to be turned on)
+    easyfeh -show-down       -> Prints out all the wallpapers downloaded from internet (If any)
+    easyfeh -show-curr       -> Prints out the path to the current wallpaper(last used, requires wallpaper history to be turned on)
 
     easyfeh -download <amount>      -> Downloads wallpapers(Doesn't set them)
     -query <query> -source <source>    Optional arguments : -query , -source
@@ -80,19 +88,53 @@ Commands:
 ** The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.toml **
 """
 
+supported_formats = [
+    "bmp",   
+    "jpeg", 
+    "jpg", 
+    "png",
+    "gif",   
+    "tiff",
+    "tif",
+    "ppm",   
+    "pgm",  
+    "pbm", 
+    "pnm",
+    "xbm",   
+    "xpm",  
+    "webp",
+    "heif",  
+    "heic"  
+]
+
 ## Create Config if it doesn't exist ##==============================================================
 
-if not "easyfeh" in listdir(config_):
-    mkdir(config_+ "/easyfeh")
-    with open(config_path, "w") as f:
-        f.write(default_config)
-    with open(path.join(config_directory, "history.txt"), "w") as f:
-        pass
-
-else:
-    if not path.isfile(config_path):
+def generateConf():
+    if not "easyfeh" in listdir(config_):
+        mkdir(config_+ "/easyfeh")
         with open(config_path, "w") as f:
             f.write(default_config)
-    if not path.isfile(history_path):
-        with open(history_path, "w") as f:
+        with open(path.join(config_directory, "history.txt"), "w") as f:
             pass
+
+    else:
+        if not path.isfile(config_path):
+            with open(config_path, "w") as f:
+                f.write(default_config)
+        if not path.isfile(history_path):
+            with open(history_path, "w") as f:
+                pass
+
+def generateWallDirs():
+    with open(config_path,"r") as f:
+        c=load(f)
+    saveWall=c["internet"]["wallpaper_save_directory"]
+    allWall=c["wallpaper"]["wallpaper_directory"]
+    if not path.exists(saveWall):
+        makedirs(saveWall,exist_ok=True)
+    if not path.exists(allWall):
+        makedirs(allWall,exist_ok=True)
+
+generateConf()
+generateWallDirs()
+
