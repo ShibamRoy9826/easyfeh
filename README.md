@@ -7,7 +7,8 @@ A straight-forward & user-friendly wrapper for [feh](https://github.com/derf/feh
 - A wallpaper history , allows you to move forward or backward in history
 - Highly customizable
 - Allows users to fetch wallpapers from [unsplash](https://unsplash.com/) and [wallhaven](https://wallhaven.cc/)
-- Also works in wayland but uses [swww](https://github.com/LGFae/swww) instead of feh
+- Also works in wayland but uses [swww](https://github.com/LGFae/swww) instead of feh by default
+- Users can use any linux-tool if they don't want to use swww or feh
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
@@ -26,6 +27,7 @@ The dependencies include:
 - [requests](https://pypi.org/project/requests/)
 
 Although the dependencies will be automatically installed while installing the application, if you still want to install these dependencies manually, you can checkout the `requirements.txt` file. and run `pip install -r requirements.txt`
+If you want to use something other than feh or swww, you can do that by enabling `other` in the configuration file, and setting the cmd parameter
 
 <h2>
     Installation <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/7b282ec6-fcc3-4600-90a7-2c3140549f58" width="30">
@@ -95,6 +97,13 @@ options = "--bg-fill" # Feh options
 # Only if you're using wayland
 options = ""
 
+[other]
+enabled = false
+# If you want to use something other than feh or swww
+cmd = ""
+# Example: command -options :f: 
+#    :f: get's replaced by the image path
+
 [internal]
 # Current Wallpaper index in the history
 wall_index = -1
@@ -128,20 +137,22 @@ Commands:
     easyfeh -reset-walls     -> Deletes all wallpapers downloaded from internet
     easyfeh -reset-conf      -> WARNING! Deletes Existing configuration and resets to default (Take backups before running this!)
     easyfeh -show-hist       -> Prints out the history
-    easyfeh -show-installed  -> Prints out all the wallpapers installed from internet (If any)
-    easyfeh -show-current    -> Prints out the path to the current wallpaper(last used, requires wallpaper history to be turned on)
+    easyfeh -show-down       -> Prints out all the wallpapers downloaded from internet (If any)
+    easyfeh -show-curr       -> Prints out the path to the current wallpaper(last used, requires wallpaper history to be turned on)
 
     easyfeh -download <amount>      -> Downloads wallpapers(Doesn't set them)
     -query <query> -source <source>    Optional arguments : -query , -source
                                        If not specified, it will check the configuration.
                                        Available options for sources: unsplash, wallhaven
 
+
+** The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.toml **
 ```
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
 ## To-Do 🛠️
-- File type checks (Verification of files, if they are images or not)
+- Shorter command alternatives
 - Configuration verifier
 - Easy to switch wallpaper collections/themes
 - Wallpaper effects (blur, dim ,etc..)
