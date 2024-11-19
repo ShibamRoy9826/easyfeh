@@ -90,7 +90,7 @@ def main():
                 with open(history_path, "r") as f:
                     walls = f.readlines()
                     newIndex = int(config["internal"]["wall_index"]) - 1
-                    toSet = walls[newIndex]
+                    toSet = walls[newIndex].replace("\n","")
                     if path.isfile(toSet):
                         setWall(toSet, save=False)
                         config["internal"]["wall_index"] = newIndex
@@ -110,7 +110,7 @@ def main():
                     if newIndex != 0:
                         config["internal"]["wall_index"] = newIndex
                         setConf(config)
-                        toSet = walls[newIndex]
+                        toSet = walls[newIndex].replace("\n","")
                         if path.isfile(toSet):
                             setWall(toSet, save=False)
                         else:
