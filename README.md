@@ -1,6 +1,8 @@
 # EasyFeh 
 
-A straight-forward & user-friendly wrapper for [feh](https://github.com/derf/feh), written in Python :)
+A straight-forward & user-friendly wrapper originally meant for [feh](https://github.com/derf/feh), but works with any other wallpaper engine too!
+
+written with ❤️ in Python :)
 
 ## Features 😎
 
@@ -154,6 +156,8 @@ Commands:
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
 ## To-Do 🛠️
+- Fetch wallpapers faster with wallhaven API
+- Option for API keys
 - Shorter command alternatives
 - Configuration verifier
 - Easy to switch wallpaper collections/themes
