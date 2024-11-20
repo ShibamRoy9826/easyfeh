@@ -64,26 +64,49 @@ Commands:
     or easyfeh -help         -> Prints this help message
 
     easyfeh -restore         -> Sets the wallpaper which was last used (Sets random if no history is saved, needs random to be enabled in 
-                                that case)
+    or easyfeh -res             that case)
+
     easyfeh -prev            -> Sets previous wallpaper (requires wallpaper history to be turned on)
+    or easyfeh -p
+
     easyfeh -next            -> Sets next wallpaper (requires wallpaper history to be turned on)
-    easyfeh -random          -> Sets a random wallpaper (directory for random wallpaper must be configured or internet wallpapers should be                                turned on)
+    or easyfeh -n
+
+    easyfeh -random          -> Sets a random wallpaper (directory for random wallpaper must be configured or internet wallpapers should be    or easyfeh -r               turned on)
+
     easyfeh -random          -> Sets a random wallpaper from the internet
             -use-internet       
+    or easyfeh -r -ui
+
     easyfeh -random          -> Sets a random wallpaper from wallpapers downloaded from internet
             -use-down
+    or easyfeh -r -ud
+
     easyfeh [some_img_path]  -> Sets an image as wallpaper (supported formats : jpg, jpeg, png, pnm, tiff, bmp, gif)
+
     easyfeh -reset-hist      -> Resets the wallpaper history (Keeps the last used wallpaper)
+    or easyfeh -rh
+
     easyfeh -reset-walls     -> Deletes all wallpapers downloaded from internet
+    or easyfeh -rw
+
     easyfeh -reset-conf      -> WARNING! Deletes Existing configuration and resets to default (Take backups before running this!)
+    or easyfeh -rc
+    
     easyfeh -show-hist       -> Prints out the history
+    or easyfeh -sh
+
     easyfeh -show-down       -> Prints out all the wallpapers downloaded from internet (If any)
+    or easyfeh -sd
+
     easyfeh -show-curr       -> Prints out the path to the current wallpaper(last used, requires wallpaper history to be turned on)
+    or easyfeh -sc
 
     easyfeh -download <amount>      -> Downloads wallpapers(Doesn't set them)
     -query <query> -source <source>    Optional arguments : -query , -source
-                                       If not specified, it will check the configuration.
-                                       Available options for sources: unsplash, wallhaven
+    or                                 If not specified, it will check the configuration.
+    easyfeh -d <amount> -q <query>     Available options for sources: unsplash, wallhaven
+        -s <source>                 
 
 
 ** The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.toml **

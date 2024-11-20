@@ -40,7 +40,7 @@ def main():
         setWall(img_path)
         ran=True
     else:
-        if "-restore" in options:
+        if ("-restore" in options) or ("-res" in options):
             try:
                 with open(path.join(config_directory, "history.txt"), "r") as f:
                     walls = f.readlines()
@@ -61,7 +61,7 @@ def main():
 
             ran=True
 
-        if "-reset-hist" in options:
+        if ("-reset-hist" in options) or ("-rh" in options):
             confirm=input("Are you sure you want to clear your history? (y/n) :")
             if confirm.lower()=="y":
                 resetHistory(getConf("internal", "wall_index"))
@@ -69,7 +69,7 @@ def main():
             else:
                 print("Aborted...")
             ran=True
-        if "-reset-conf" in options:
+        if ("-reset-conf" in options) or ("-rc" in options):
             confirm=input("Are you sure you want to reset your configuration? (y/n) :")
             if confirm.lower()=="y":
                 write_defaults()
@@ -77,7 +77,7 @@ def main():
             else:
                 print("Aborted...")
             ran=True
-        if "-reset-walls" in options:
+        if ("-reset-walls" in options) or ("-rw" in options):
             confirm=input("Are you sure you want to all wallpapers delete? (y/n) :")
             if confirm.lower()=="y":
                 resetDownloaded()
@@ -85,7 +85,7 @@ def main():
             else:
                 print("Aborted...")
             ran=True
-        if "-prev" in options:
+        if ("-prev" in options) or ("-p" in options):
             try:
                 with open(history_path, "r") as f:
                     walls = f.readlines()
@@ -102,7 +102,7 @@ def main():
                     "No previous wallpaper found. (Maybe already on oldest, Check history!)"
                 )
             ran=True
-        if "-next" in options:
+        if ("-next" in options) or ("-n" in options):
             try:
                 with open(history_path, "r") as f:
                     walls = f.readlines()
@@ -124,47 +124,47 @@ def main():
                     "No next wallpaper found. (Maybe already on latest, Check history!)"
                 )
             ran=True
-        elif ("-random" in options) and ("-use-internet" in options):
+        elif (("-random" in options) and ("-use-internet" in options)) or (("-r" in options) and ("-ui" in options)):
             setRandom(config, use_internet=True)
             ran=True
-        elif ("-random" in options) and ("-use-down" in options):
+        elif ("-random" in options) and ("-use-down" in options) or (("-r" in options) and ("-ud" in options)) :
             setRandom(config,use_down=True)
             ran=True
-        elif "-random" in options:
+        elif ("-random" in options) or ("-r" in options):
             if getConf("internet","use_from_internet"):
                 setRandom(config,use_internet=True)
             else:
                 setRandom(config)
             ran=True
-        if "-show-hist" in options:
+        if ("-show-hist" in options) or ("-sh" in options):
             printHistory()
             ran=True
 
-        if "-show-down" in options:
+        if ("-show-down" in options) or ("-sd" in options):
             listInstalled()
             ran=True
         
-        if "-show-curr" in options:
+        if ("-show-curr" in options) or ("-sc" in options):
             showCurrent()
             ran=True
-        if "-download" in options:
+        if ("-download" in options) or ("-d" in options):
             ran=True
             try:
                 amount=1
-                source="unsplash"
+                source="wallhaven"
                 query=getConf("internet","image_query")
                 for ind,i in enumerate(argv):
-                    if i=="-download":
+                    if i=="-download" or i=="-d":
                         try:
                             amount=int(argv[ind+1])
-                        except IndexError:
+                        except (IndexError,ValueError):
                             pass
-                    if i=="-query":
+                    if i=="-query" or i=="-q":
                         try:
                             query=argv[ind+1]
                         except IndexError:
                             pass
-                    if i=="-source":
+                    if i=="-source" or i=="-s":
                         try:
                             source=argv[ind+1]
                         except IndexError:
