@@ -127,6 +127,9 @@ def main():
         elif ("-random" in options) and ("-use-internet" in options):
             setRandom(config, use_internet=True)
             ran=True
+        elif ("-random" in options) and ("-use-down" in options):
+            setRandom(config,use_down=True)
+            ran=True
         elif "-random" in options:
             if getConf("internet","use_from_internet"):
                 setRandom(config,use_internet=True)

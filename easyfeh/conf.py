@@ -67,10 +67,11 @@ Commands:
                                 that case)
     easyfeh -prev            -> Sets previous wallpaper (requires wallpaper history to be turned on)
     easyfeh -next            -> Sets next wallpaper (requires wallpaper history to be turned on)
-    easyfeh -random          -> Sets a random wallpaper (directory for random wallpaper must be configured or internet wallpapers should be 
-                                turned on)
+    easyfeh -random          -> Sets a random wallpaper (directory for random wallpaper must be configured or internet wallpapers should be                                turned on)
     easyfeh -random          -> Sets a random wallpaper from the internet
             -use-internet       
+    easyfeh -random          -> Sets a random wallpaper from wallpapers downloaded from internet
+            -use-down
     easyfeh [some_img_path]  -> Sets an image as wallpaper (supported formats : jpg, jpeg, png, pnm, tiff, bmp, gif)
     easyfeh -reset-hist      -> Resets the wallpaper history (Keeps the last used wallpaper)
     easyfeh -reset-walls     -> Deletes all wallpapers downloaded from internet

@@ -102,7 +102,7 @@ def chooseRandom(directory,more=[]):
     else:
         return None
 
-def setRandom(config,use_internet=False):
+def setRandom(config,use_internet=False,use_down=False):
     if use_internet:
         q=getConf("internet","image_query")
         if q=="":
@@ -113,6 +113,21 @@ def setRandom(config,use_internet=False):
             d=Downloader(q,source=returnSource())
             d.download(count=1)
             setWall(d.images[0])
+    elif use_down:
+        if config["internet"]["use_saved"]:
+            moreDirs=[config["internet"]["wallpaper_save_directory"]]
+        else:
+            moreDirs=[]
+
+        randomWall=chooseRandom("",more=moreDirs)
+        if randomWall==None:
+            print("Found no proper images, fetching from the internet")
+            setRandom(config,use_internet=True)
+        else:
+            setWall(randomWall)
+            config["internal"]["wall_index"]=-1
+            setConf(config)
+
     else:
         if config["internet"]["use_saved"]:
             moreDirs=[config["internet"]["wallpaper_save_directory"]]
@@ -168,8 +183,12 @@ def printHistory():
 
 def listInstalled():
     try:
-        for i in listdir(getConf("internet","wallpaper_save_directory")):
-            print(i)
+        saveDir=getConf("internet","wallpaper_save_directory")
+        count=0
+        for i in listdir(saveDir):
+            print(path.join(saveDir,i))
+            count+=1
+        print("\nTotal downloaded wallpapers: ",count)
     except:
         print("Error: Wasn't able to fetch the wallpapers... are you sure that the directory is configured properly in the config file?")
 
