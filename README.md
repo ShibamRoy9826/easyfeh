@@ -10,9 +10,12 @@ written with ❤️ in Python :)
 - Highly customizable
 - Allows users to fetch wallpapers from [unsplash](https://unsplash.com/) and [wallhaven](https://wallhaven.cc/)
 - Also works in wayland but uses [swww](https://github.com/LGFae/swww) instead of feh by default
-- Users can use any linux-tool if they don't want to use swww or feh
+- Users can use any other wallpaper engine if they don't want to use swww or feh
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+
+## Demo 
+[My Post On r/unixporn](https://www.reddit.com/r/unixporn/comments/1guwilk/oc_created_a_wallpaper_managing_application/)
 
 ## Dependencies
 
@@ -65,7 +68,7 @@ That's it! read the usage of the commands and enjoy!
 The configuration file for EasyFeh can be found at `$HOME/.config/easyfeh/config.toml`
 
 > [!NOTE]
-> Please configure the wallpaper_directory parameter, it will not work well otherwise, it doesn't have filetype checks yet, so it might pick up a non-image file as wallpaper when it tries to find a random wallpaper
+> Its recommended to configure the wallpaper_directory so that its easier to set your desired wallpapers
 
 Its well-commented with explaination of each parameter. Here's the default configuration file of EasyFeh
 
