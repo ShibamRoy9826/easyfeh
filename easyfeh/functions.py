@@ -2,9 +2,12 @@
 from os import listdir, walk, getenv,remove
 from random import choice
 from subprocess import run
+from rich.console import Console
 from .conf import *
 from .webscraper import Downloader
 
+
+c=Console()
 
 ## Config related Functions ##========================================================================================
 
@@ -79,7 +82,7 @@ def runOnChange():
     if cmd!="":
         run(cmd,shell=True,capture_output=False)
     else:
-        print("Warning: Check your configuration plz, either disable command_on_change or set a valid command!")
+        c.print("[red underline]Warning[/red underline]: Check your configuration plz, either disable command_on_change or set a valid command!")
 
 ## Wallpaper related functions ##========================================================================================
 
@@ -121,7 +124,7 @@ def setRandom(config,use_internet=False,use_down=False):
 
         randomWall=chooseRandom("",more=moreDirs)
         if randomWall==None:
-            print("Found no proper images, fetching from the internet")
+            print("Found no proper images, fetching from the internet...")
             setRandom(config,use_internet=True)
         else:
             setWall(randomWall)
@@ -136,7 +139,7 @@ def setRandom(config,use_internet=False,use_down=False):
 
         randomWall=chooseRandom(config["wallpaper"]["wallpaper_directory"],more=moreDirs)
         if randomWall==None:
-            print("Found no proper images, fetching from the internet")
+            print("Found no proper images, fetching from the internet...")
             setRandom(config,use_internet=True)
         else:
             setWall(randomWall)
@@ -172,14 +175,15 @@ def setWall(p, save=True):
 ## Printing functions ##========================================================================================
 
 def printHistory():
+    global c
     try:
         with open(history_path, "r") as f:
             print(f.read())
             f.seek(0)
             l=len(f.readlines())
-            print("Total wallpapers in history: ",l)
+            c.print("[blue]Total wallpapers in history: [/blue]",l)
     except:
-        print("Error: Wasn't able to fetch history, are you sure history is turned on in the config file?")
+        c.print("[red]Error:[/red] Wasn't able to fetch history, are you sure history is turned on in the config file?")
 
 def listInstalled():
     try:
@@ -188,12 +192,13 @@ def listInstalled():
         for i in listdir(saveDir):
             print(path.join(saveDir,i))
             count+=1
-        print("\nTotal downloaded wallpapers: ",count)
+        c.print("\n[blue]Total downloaded wallpapers: [/blue]",count)
     except:
-        print("Error: Wasn't able to fetch the wallpapers... are you sure that the directory is configured properly in the config file?")
+        c.print("[red]Error:[/red] Wasn't able to fetch the wallpapers... are you sure that the directory is configured properly in the config file?")
 
 def helpText():
-    print(helpTxt)
+    global c
+    c.print(helpTxt)
 
 def showCurrent():
     try:
@@ -201,4 +206,4 @@ def showCurrent():
             curr=f.readlines()[int(getConf("internal","wall_index"))]
             print(curr)
     except:
-        print("Error: Wallpaper not found, are you sure that wallpaper history is turned on?")
+        c.print("[red]Error:[/red] Wallpaper not found, are you sure that wallpaper history is turned on?")

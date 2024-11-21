@@ -9,13 +9,13 @@ with open(config_path, "r") as f:
     config = load(f)
 
 class Downloader:
-    def __init__(self,query,source=0):
+    def __init__(self,query,source=1):
         global config
         self.q=self.formatQuery(query)
         self.images=[]
         self.download_dir=config["internet"]["wallpaper_save_directory"]
-        # Source 0 -> unsplash(default)
-        # Source 1 -> wallhaven
+        # Source 0 -> unsplash
+        # Source 1 -> wallhaven (default)
         if source==1:
             wallhaven_query=self.formatQuery(query,separator="+")
             if config["internet"]["wallhaven_purity"]=="sfw":
@@ -84,7 +84,6 @@ class Downloader:
                     flname=self.download_dir+"/"+imgAddr[imgAddr.rfind('/')+1:]
                     results.append([imgAddr,flname])
             return results
-
 
     def download(self,count=1):
         a=self.search(count=count)

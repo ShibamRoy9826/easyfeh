@@ -12,7 +12,7 @@ def readRequirements():
 
 setup(
     name="easyfeh",
-    version="0.1.1",
+    version="0.1.2",
     description="An easy to use feh wrapper with cool features",
     author="Shibam Roy",
     author_email="shibamroy9826@gmail.com",
