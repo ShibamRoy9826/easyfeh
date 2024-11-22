@@ -42,6 +42,11 @@ If you're on Arch Linux, like me, then you can install it from the AUR:
 ```bash
 paru -S easyfeh
 ```
+
+There's also a development version to check out the latest changes:
+```bash
+paru -S easyfeh-git
+```
 Make sure to replace `paru` with whatever AUR helper you use.
 
 For other distros try (installs locally to the user):
@@ -118,7 +123,7 @@ wall_index = -1
     Usage <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/7b282ec6-fcc3-4600-90a7-2c3140549f58" width="30">
 </h2>
 
-Here's a list of all the commands
+Here's a list of all the commands (Updated as of the latest commit)
 ```text
 EasyFeh
 __________
@@ -126,56 +131,58 @@ __________
 Typical Usage: easyfeh -[option] [img_path(if required)]
 
 Commands:
-    easyfeh -h 
+    easyfeh -h
     or easyfeh -help         -> Prints this help message
 
-    easyfeh -restore         -> Sets the wallpaper which was last used (Sets random if no history is saved, needs random to be enabled in 
-    or easyfeh -res             that case)
+    easyfeh -restore
+    or easyfeh -res          -> Sets the wallpaper which was last used (Sets random if no history is saved,
+                                needs random to be enabled in that case)
 
-    easyfeh -prev            -> Sets previous wallpaper (requires wallpaper history to be turned on)
-    or easyfeh -p
+    easyfeh -prev            
+    or easyfeh -p            -> Sets previous wallpaper (requires wallpaper history to be turned on)
 
-    easyfeh -next            -> Sets next wallpaper (requires wallpaper history to be turned on)
-    or easyfeh -n
+    easyfeh -next            
+    or easyfeh -n            -> Sets next wallpaper (requires wallpaper history to be turned on)
 
-    easyfeh -random          -> Sets a random wallpaper (directory for random wallpaper must be configured or internet wallpapers should      or easyfeh -r               be turned on)
+    easyfeh -random          
+    or easyfeh -r            -> Sets a random wallpaper (directory for random wallpaper must be configured 
+                                or internet wallpapers should be turned on)
 
-    easyfeh -random          -> Sets a random wallpaper from the internet
-            -use-internet       
-    or easyfeh -r -ui
+    easyfeh -random          
+            -use-internet 
+    or easyfeh -r -ui        -> Sets a random wallpaper from the internet
 
-    easyfeh -random          -> Sets a random wallpaper from wallpapers downloaded from internet
+    easyfeh -random          
             -use-down
-    or easyfeh -r -ud
+    or easyfeh -r -ud        -> Sets a random wallpaper from wallpapers downloaded from internet
 
-    easyfeh [some_img_path]  -> Sets an image as wallpaper (supported formats : jpg, jpeg, png, pnm, tiff, bmp, gif)
+    easyfeh [some_img_path]  -> Sets an image as wallpaper 
+                                (supported formats : jpg, jpeg, png, pnm, tiff, bmp, gif)
 
-    easyfeh -reset-hist      -> Resets the wallpaper history (Keeps the last used wallpaper)
-    or easyfeh -rh
+    easyfeh -reset-hist      
+    or easyfeh -rh           ->  WARNING! Resets the wallpaper history (Keeps the last used wallpaper,Take backups before running this!) 
 
-    easyfeh -reset-walls     -> Deletes all wallpapers downloaded from internet
-    or easyfeh -rw
+    easyfeh -reset-walls     
+    or easyfeh -rw           -> WARNING! Deletes all wallpapers downloaded from internet (Take backups before running this!)
 
-    easyfeh -reset-conf      -> WARNING! Deletes Existing configuration and resets to default (Take backups before running this!)
-    or easyfeh -rc
+    easyfeh -reset-conf      
+    or easyfeh -rc           -> WARNING! Deletes Existing configuration and resets to default (Take backups before running this!)
     
-    easyfeh -show-hist       -> Prints out the history
-    or easyfeh -sh
+    easyfeh -show-hist      
+    or easyfeh -sh           -> Prints out the history
 
-    easyfeh -show-down       -> Prints out all the wallpapers downloaded from internet (If any)
-    or easyfeh -sd
+    easyfeh -show-down      
+    or easyfeh -sd           -> Prints out all the wallpapers downloaded from internet (If any)
 
-    easyfeh -show-curr       -> Prints out the path to the current wallpaper(last used, requires wallpaper history to be turned on)
-    or easyfeh -sc
+    easyfeh -show-curr       
+    or easyfeh -sc           -> Prints out the path to the current wallpaper (last used, requires wallpaper history to be turned on)
 
-    easyfeh -download <amount>      -> Downloads wallpapers(Doesn't set them)
-    -query <query> -source <source>    Optional arguments : -query , -source
-    or                                 If not specified, it will check the configuration.
-    easyfeh -d <amount> -q <query>     Available options for sources: unsplash, wallhaven
-        -s <source>                 
+    easyfeh -download <amount>       -> Downloads wallpapers (Doesn't set them)
+    -query <query> -source <source>        Optional arguments : -query , -source
+    or                                     If not specified, it will check the configuration.
+    easyfeh -d <amount> -q <query>         Available options for sources: wallhaven, unsplash 
+        -s <source> 
 
-
-** The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.toml **
 ```
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
