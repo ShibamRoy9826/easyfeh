@@ -54,7 +54,23 @@ def resetDownloaded():
     except (FileNotFoundError,IndexError):
         for img in listdir(getConf("internet","wallpaper_save_directory")):
             remove(path.join(getConf("internet","wallpaper_save_directory"),img))
-    
+def deleteLast():
+    try:
+        with open(history_path,"r") as f:
+            hist=f.readlines()
+            ind=int(getConf("internal","wall_index"))-1
+            lastUsed=hist[ind].replace("\n","")
+            hist.pop(ind)
+            remove(lastUsed)
+        a=""
+        for i in hist:
+            a+=i
+        with open(history_path,"w") as f:
+            f.write(a)
+        print("Done!")
+    except:
+        c.print("[red]Error:[/red] unable to delete, maybe its no longer in the history...")
+
 
 def appendHistory(p):
     if path.isfile(history_path):
@@ -149,26 +165,28 @@ def setRandom(config,use_internet=False,use_down=False):
 def setWall(p, save=True):
     p = path.abspath(p)
 
-
-    if getConf("other","enabled"):
-        cmd = getConf("other","cmd").replace(":f:",p)
-        run(f'{cmd}', shell=True,capture_output=False)
-    else:
-        if getenv("XDG_SESSION_TYPE")=="x11":
-            options = getConf("feh","options") 
-            run(f"feh {options} {p}", shell=True, capture_output=False)
+    if path.isfile(p):
+        if getConf("other","enabled"):
+            cmd = getConf("other","cmd").replace(":f:",p)
+            run(f'{cmd}', shell=True,capture_output=False)
         else:
-            options = getConf("swww","options")
-            run(f"swww img {p} {options}",shell=True,capture_output=False)
+            if getenv("XDG_SESSION_TYPE")=="x11":
+                options = getConf("feh","options") 
+                run(f"feh {options} {p}", shell=True, capture_output=False)
+            else:
+                options = getConf("swww","options")
+                run(f"swww img {p} {options}",shell=True,capture_output=False)
 
-    if save and getConf("wallpaper","remember_wallpaper"):
-        appendHistory(p)
-    print("Done! Wallpaper has been set:)")
-    if getConf("triggers","notify_on_change"):
-        sendNotif(p)
-        
-    if getConf("triggers","command_on_change"):
-        runOnChange()
+        if save and getConf("wallpaper","remember_wallpaper"):
+            appendHistory(p)
+        print("Done! Wallpaper has been set:)")
+        if getConf("triggers","notify_on_change"):
+            sendNotif(p)
+            
+        if getConf("triggers","command_on_change"):
+            runOnChange()
+    else:
+        c.print("[bold red]Error:[/bold red] Invalid filetype, Are you sure that its an image?")
 
 
 
@@ -178,9 +196,13 @@ def printHistory():
     global c
     try:
         with open(history_path, "r") as f:
-            print(f.read())
-            f.seek(0)
-            l=len(f.readlines())
+            allStuff=f.readlines()
+            l=len(allStuff)
+            for ind,i in enumerate(allStuff):
+                if ind==(l+getConf("internal","wall_index")):
+                    c.print(i.replace("\n",""),r"[blue bold](Current)[/blue bold]")
+                else:
+                    print(i,end="")
             c.print("[blue]Total wallpapers in history: [/blue]",l)
     except:
         c.print("[red]Error:[/red] Wasn't able to fetch history, are you sure history is turned on in the config file?")
@@ -196,9 +218,6 @@ def listInstalled():
     except:
         c.print("[red]Error:[/red] Wasn't able to fetch the wallpapers... are you sure that the directory is configured properly in the config file?")
 
-def helpText():
-    global c
-    c.print(helpTxt)
 
 def showCurrent():
     try:
