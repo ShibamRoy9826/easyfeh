@@ -2,8 +2,10 @@
 This file contains most of the variables that easyfeh uses
 """
 
-from os import getlogin, listdir, makedirs, mkdir, path
-from toml import load,dump
+from os import getlogin, listdir, makedirs, path
+from typing import Union
+
+from toml import dump, load
 
 username = getlogin()
 config_ = f"/home/{username}/.config"
@@ -33,6 +35,13 @@ notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_c
 notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
 command = "" # Set only if command_on_change is turned on
 
+[palette]
+save_palette = true  # Saves the requested palette from -gc command, to a txt file, where each line is in the format: (R,G,B)       #hex
+palette_path = "/home/{username}/.config/easyfeh/palette.txt" # Where to keep the newly generated palette?
+dominant_color_quality = 6 # (10 is highest, and 1 is the least, smaller values take less time, but at a cost of quality)
+general_palette_copy = true # Generates another copy of the palette with values like fg, bg, primary, and secondary
+complete_palette_path = "/home/{username}/.config/easyfeh/full_palette.txt" # Where to store the newly generated complete palette?
+
 [feh]
 options = "--bg-fill" # Feh options
 
@@ -61,29 +70,30 @@ helpTxt = r"""
 """
 
 supported_formats = [
-    "bmp",   
-    "jpeg", 
-    "jpg", 
+    "bmp",
+    "jpeg",
+    "jpg",
     "png",
-    "gif",   
+    "gif",
     "tiff",
     "tif",
-    "ppm",   
-    "pgm",  
-    "pbm", 
+    "ppm",
+    "pgm",
+    "pbm",
     "pnm",
-    "xbm",   
-    "xpm",  
+    "xbm",
+    "xpm",
     "webp",
-    "heif",  
-    "heic"  
+    "heif",
+    "heic",
 ]
 
 ## Create Config if it doesn't exist ##==============================================================
 
-def generateConf():
+
+def generateConf() -> None:
     if not "easyfeh" in listdir(config_):
-        mkdir(config_+ "/easyfeh")
+        makedirs(path.join(config_, "/easyfeh"))
         with open(config_path, "w") as f:
             f.write(default_config)
         with open(path.join(config_directory, "history.txt"), "w") as f:
@@ -97,16 +107,17 @@ def generateConf():
             with open(history_path, "w") as f:
                 pass
 
-def generateWallDirs():
-    with open(config_path,"r") as f:
-        c=load(f)
-    saveWall=c["internet"]["wallpaper_save_directory"]
-    allWall=c["wallpaper"]["wallpaper_directory"]
+
+def generateWallDirs() -> None:
+    with open(config_path, "r") as f:
+        c = load(f)
+    saveWall = c["internet"]["wallpaper_save_directory"]
+    allWall = c["wallpaper"]["wallpaper_directory"]
     if not path.exists(saveWall):
-        makedirs(saveWall,exist_ok=True)
+        makedirs(saveWall, exist_ok=True)
     if not path.exists(allWall):
-        makedirs(allWall,exist_ok=True)
+        makedirs(allWall, exist_ok=True)
+
 
 generateConf()
 generateWallDirs()
-

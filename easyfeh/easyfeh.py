@@ -8,14 +8,16 @@
 By Shibam Roy
 """
 
+from argparse import ArgumentParser
 ## Modules ##=========================================================================================
 # import traceback # Occasionally for debugging
 from sys import stdout
+
+from rich.panel import Panel
+
 from .conf import *
 from .functions import *
-from argparse import ArgumentParser
-from sys import stdout
-from rich.panel import Panel
+
 
 class ArgP(ArgumentParser):
     def _print_help(self,file=None):
@@ -37,7 +39,9 @@ class ArgP(ArgumentParser):
                 elif "-q" in opts:
                     s="[bold]easyfeh -d [blue]<amount>[/blue] -q [blue]<query>[/blue] -s [blue]<source>[/blue][/bold]       -> [green]Download wallpapers [white](Doesn't set them)\nor [bold]easyfeh --query [blue]<query>[/blue] --source [blue]<source>[/blue][/bold]\n\n(Optional arguments: -q, -s ; If not specified, it will check configuration)(Source options: wallhaven(default), unsplash)[/white][/green]"
                     lines.append(s)
-
+                elif "-gc" in opts:
+                    s="[bold]easyfeh -gc [blue]<amount>[/blue][/bold]      -> [green]Prints out dominant colors from an image (RGB values)[/green]"
+                    lines.append(s)
             else:
                 if opts==[]:
                     cmd_lines.append("easyfeh [blue]<some_image_path>[/blue]")
@@ -103,6 +107,9 @@ def main():
     parser.add_argument("-sd","--show-down",action="store_true",help="Prints out all the wallpapers downloaded from internet [white](If any)[/white]")
 
     parser.add_argument("-sc","--show-curr",action="store_true",help="Prints out the path to the current wallpaper [white](last used, requires wallpaper history to be turned on)[/white]")
+    
+    parser.add_argument("-gc","--get-colors",type=int,help="")
+    parser.add_argument("-gd","--get-dominant",help="Prints out the most dominant from an image (RGB values)")
 
     parser.add_argument("-d","--download",type=int,help="Download wallpapers[white](Doesn't set them)[/white]")
     parser.add_argument("-q","--query",type=str,help="")
@@ -168,9 +175,9 @@ def main():
                 newIndex = int(config["internal"]["wall_index"]) - 1
                 toSet = walls[newIndex].replace("\n","")
                 if path.isfile(toSet):
-                    setWall(toSet, save=False)
                     config["internal"]["wall_index"] = newIndex
                     setConf(config)
+                    setWall(toSet, save=False)
                 else:
                     c.print("[red]Previous wallpaper doesn't exist anymore...[/red]")
         except:
@@ -213,7 +220,7 @@ def main():
     if args.show_down:
         listInstalled()
     if args.show_curr:
-        showCurrent()
+        print(showCurrent())
     if args.download:
         amount=args.download
         source="wallhaven"
@@ -228,6 +235,26 @@ def main():
         d=Downloader(query,source=returnSourceParam(source))
         d.download(count=amount)
         c.print(f"[green]Successfully downloaded [yellow]{amount}[/yellow] wallpaper(s)![/green]")
+
+    if args.get_colors:
+        getPalette(amount=args.get_colors,save_palette=getConf("palette","save_palette"),general_palette=getConf("palette","general_palette_copy"))
+
+
+
+    if args.get_dominant:
+        try:
+            from colorthief import ColorThief
+            fl=showCurrent(show_error=False)
+            # Handle case when fl is Nonetype, modify setRandom to return a random wallpaper path 
+            img=ColorThief(fl)
+            col=img.get_color(quality=getConf("palette","dominant_color_quality"))
+            h=rgbToHex(col)
+            c.print(h,style=f"{h}")
+
+        except ImportError:
+            c.print("[bold red]Error:[/bold red] colorthief module is not installed! You need to install it to use this feature!")
+
+
     if not any(vars(args).values()): 
         c.print("[red]No arguments provided...[/red] , try running [green]'easyfeh -h'[/green]")
             
