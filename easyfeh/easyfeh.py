@@ -80,6 +80,7 @@ def main():
 ## Main Program ##======================================================================
     parser=ArgP(add_help=False)
     parser.add_argument("-h","--help",action="store_true",help="Prints this help message")
+    parser.add_argument("-v","--version",action="store_true",help="Prints out app version")
 
     parser.add_argument("img",nargs="?",type=str,help="Sets the wallpaper which was last used [white](Sets random if no history is saved, needs random to be enabled in that case)[/white]")
 
@@ -119,6 +120,8 @@ def main():
 
     if args.help:
         parser.print_help()
+    if args.version:
+        c.print("[bold blue]EasyFeh Version: [/bold blue]",f"[yellow]{version}[/yellow]")
     if args.img:
         setWall(args.img)
         

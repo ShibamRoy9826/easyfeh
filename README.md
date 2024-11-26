@@ -88,7 +88,7 @@ Its well-commented with explaination of each parameter. Here's the default confi
 ```text
 
 [wallpaper]
-wallpaper_directory= "/home/shibam/Pictures"
+wallpaper_directory= "/home/{username}/Pictures"
 random = false # sets random wallpapers from wallpaper_directory
 remember_wallpaper = true # Saves to history 
 wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
@@ -96,11 +96,13 @@ wallpaper_history_limit = 50 # history limit, history resets automatically once 
 [internet]
 use_from_internet = false
 image_source = "wallhaven" # "wallhaven"(default) or "unsplash"
-wallpaper_save_directory = "/home/shibam/Pictures/easyfeh"
+wallpaper_save_directory = "/home/{username}/Pictures/easyfeh"
 image_query = "landscape" # Search for images you want, default is "landscape" 
 shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result) , only valid for unsplash results
 wallhaven_purity = "sfw" # Only if wallhaven is selected as image source. Options: "sfw", "nsfw"
 use_saved = true # Also includes already downloaded images from the internet when -random is called
+use_api = false # Not recommended, but is an option if you have an api key (Only for wallhaven) 
+wallhaven_api_key = "" # Only required if "use_api" is set to true
 
 [triggers]
 notify_on_change = false # sends a notification on wallpaper change
@@ -108,13 +110,14 @@ command_on_change = false # runs a command on wallpaper change, you can use it t
 notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
 notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
 command = "" # Set only if command_on_change is turned on
+autogenerate_palette = false # Automatically create a palette on wallpaper change
 
 [palette]
 save_palette = true  # Saves the requested palette from -gc command, to a txt file, where each line is in the format: (R,G,B)       #hex
-palette_path = "/home/shibam/.config/easyfeh/palette.txt" # Where to keep the newly generated palette?
+palette_path = "/home/{username}/.config/easyfeh/palette.txt" # Where to keep the newly generated palette?
 dominant_color_quality = 6 # (10 is highest, and 1 is the least, smaller values take less time, but at a cost of quality)
 general_palette_copy = true # Generates another copy of the palette with values like fg, bg, primary, and secondary
-complete_palette_path = "/home/shibam/.config/easyfeh/full_palette.txt" # Where to store the newly generated complete palette?
+complete_palette_path = "/home/{username}/.config/easyfeh/full_palette.txt" # Where to store the newly generated complete palette?
 
 [feh]
 options = "--bg-fill" # Feh options
@@ -143,7 +146,6 @@ wall_index = -1
 Here's a list of all the commands (Updated as of the latest commit)
 ```text
 
-
 EasyFeh
 __________
 
@@ -152,6 +154,9 @@ Typical Usage: easyfeh -[option] [img_path(if required)]
 ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ easyfeh -h     -> Prints this help message                                                                                                  │
 │ or easyfeh --help                                                                                                                           │
+│                                                                                                                                             │
+│ easyfeh -v     -> Prints out app version                                                                                                    │
+│ or easyfeh --version                                                                                                                        │
 │                                                                                                                                             │
 │ easyfeh <some_image_path>     -> Sets the wallpaper which was last used (Sets random if no history is saved, needs random to be enabled in  │
 │ that case)                                                                                                                                  │
@@ -210,7 +215,6 @@ Typical Usage: easyfeh -[option] [img_path(if required)]
 ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.toml
-
 ```
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">

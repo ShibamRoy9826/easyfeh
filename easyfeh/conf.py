@@ -7,6 +7,7 @@ from typing import Union
 
 from toml import dump, load
 
+version = "v0.1.3"
 username = getlogin()
 config_ = f"/home/{username}/.config"
 config_directory = config_ + "/easyfeh"
@@ -27,6 +28,8 @@ image_query = "landscape" # Search for images you want, default is "landscape"
 shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result) , only valid for unsplash results
 wallhaven_purity = "sfw" # Only if wallhaven is selected as image source. Options: "sfw", "nsfw"
 use_saved = true # Also includes already downloaded images from the internet when -random is called
+use_api = false # Not recommended, but is an option if you have an api key (Only for wallhaven) 
+wallhaven_api_key = "" # Only required if "use_api" is set to true
 
 [triggers]
 notify_on_change = false # sends a notification on wallpaper change
@@ -34,6 +37,7 @@ command_on_change = false # runs a command on wallpaper change, you can use it t
 notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
 notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
 command = "" # Set only if command_on_change is turned on
+autogenerate_palette = false # Automatically create a palette on wallpaper change
 
 [palette]
 save_palette = true  # Saves the requested palette from -gc command, to a txt file, where each line is in the format: (R,G,B)       #hex

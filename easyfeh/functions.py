@@ -158,7 +158,6 @@ def sendNotif(path: str) -> None:
 
 def runOnChange() -> None:
     cmd = getConf("triggers", "command")
-    getPalette(4, general_palette=True)
     if cmd != "":
         run(cmd, shell=True, capture_output=False)
     else:
@@ -288,8 +287,12 @@ def setWall(p: str, save=True) -> None:
         if getConf("triggers", "notify_on_change"):
             sendNotif(p)
 
+        if getConf("triggers","autogenerate_palette"):
+            getPalette(4, general_palette=True)
+
         if getConf("triggers", "command_on_change"):
             runOnChange()
+
     else:
         c.print(
             "[bold red]Error:[/bold red] Invalid filetype, Are you sure that its an image?"
