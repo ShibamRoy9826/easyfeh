@@ -14,7 +14,15 @@ written with ❤️ in Python :)
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
-## Demo 
+## What's New ❔
+
+- It can now grab colors from the current wallpaper!
+- Better outputs, coloured output is beautiful isn't it?
+- A palette section in the config file, more power to the users :)
+
+## Demo
+This is a little old, since then many changes have been made.. (Will soon update it, when i get the time)
+
 [My Post On r/unixporn](https://www.reddit.com/r/unixporn/comments/1guwilk/oc_created_a_wallpaper_managing_application/)
 
 ## Dependencies
@@ -78,16 +86,17 @@ The configuration file for EasyFeh can be found at `$HOME/.config/easyfeh/config
 Its well-commented with explaination of each parameter. Here's the default configuration file of EasyFeh
 
 ```text
+
 [wallpaper]
-wallpaper_directory= "/home/{username}/Pictures"
+wallpaper_directory= "/home/shibam/Pictures"
 random = false # sets random wallpapers from wallpaper_directory
 remember_wallpaper = true # Saves to history 
 wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
 
 [internet]
 use_from_internet = false
-image_source = "unsplash" # "unsplash"(default) or "wallhaven"
-wallpaper_save_directory = "/home/{username}/Pictures/easyfeh"
+image_source = "wallhaven" # "wallhaven"(default) or "unsplash"
+wallpaper_save_directory = "/home/shibam/Pictures/easyfeh"
 image_query = "landscape" # Search for images you want, default is "landscape" 
 shuffle_results = true # Recommended, else, it will always lead to the same result(The first search result) , only valid for unsplash results
 wallhaven_purity = "sfw" # Only if wallhaven is selected as image source. Options: "sfw", "nsfw"
@@ -99,6 +108,13 @@ command_on_change = false # runs a command on wallpaper change, you can use it t
 notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
 notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
 command = "" # Set only if command_on_change is turned on
+
+[palette]
+save_palette = true  # Saves the requested palette from -gc command, to a txt file, where each line is in the format: (R,G,B)       #hex
+palette_path = "/home/shibam/.config/easyfeh/palette.txt" # Where to keep the newly generated palette?
+dominant_color_quality = 6 # (10 is highest, and 1 is the least, smaller values take less time, but at a cost of quality)
+general_palette_copy = true # Generates another copy of the palette with values like fg, bg, primary, and secondary
+complete_palette_path = "/home/shibam/.config/easyfeh/full_palette.txt" # Where to store the newly generated complete palette?
 
 [feh]
 options = "--bg-fill" # Feh options
@@ -117,6 +133,7 @@ cmd = ""
 [internal]
 # Current Wallpaper index in the history
 wall_index = -1
+
 ```
 
 <h2>
@@ -125,63 +142,74 @@ wall_index = -1
 
 Here's a list of all the commands (Updated as of the latest commit)
 ```text
+
+
 EasyFeh
 __________
 
 Typical Usage: easyfeh -[option] [img_path(if required)]
 
-Commands:
-    easyfeh -h
-    or easyfeh -help         -> Prints this help message
+╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ easyfeh -h     -> Prints this help message                                                                                                  │
+│ or easyfeh --help                                                                                                                           │
+│                                                                                                                                             │
+│ easyfeh <some_image_path>     -> Sets the wallpaper which was last used (Sets random if no history is saved, needs random to be enabled in  │
+│ that case)                                                                                                                                  │
+│                                                                                                                                             │
+│ easyfeh -res     -> Sets the wallpaper which was last used (Sets random if no history is saved, needs random to be enabled in that case)    │
+│ or easyfeh --restore                                                                                                                        │
+│                                                                                                                                             │
+│ easyfeh -p     -> Sets previous wallpaper (Requires wallpaper history to be turned on)                                                      │
+│ or easyfeh --prev                                                                                                                           │
+│                                                                                                                                             │
+│ easyfeh -n     -> Sets next wallpaper (requires wallpaper history to be turned on)                                                          │
+│ or easyfeh --next                                                                                                                           │
+│                                                                                                                                             │
+│ easyfeh -r     -> Sets a random wallpaper (directory for random wallpaper must be configured or internet wallpapers should be turned on)    │
+│ or easyfeh --random                                                                                                                         │
+│                                                                                                                                             │
+│ easyfeh -r -ui       -> Sets a random wallpaper from the internet                                                                           │
+│ or easyfeh --random --use-internet                                                                                                          │
+│                                                                                                                                             │
+│ easyfeh -r -ud       -> Sets a random wallpaper which is already downloaded from the internet                                               │
+│ or easyfeh --random --use-internet                                                                                                          │
+│                                                                                                                                             │
+│ easyfeh -rh     -> WARNING Resets the wallpaper history  (Keeps the last used wallpaper,Take backups before running this!)                  │
+│ or easyfeh --reset-hist                                                                                                                     │
+│                                                                                                                                             │
+│ easyfeh -rw     -> WARNING Deletes the wallpapers downloaded from internet (Take backups before running this!)                              │
+│ or easyfeh --reset-walls                                                                                                                    │
+│                                                                                                                                             │
+│ easyfeh -rc     -> WARNING Deletes existing configuration and resets to default (Take backups before running this!)                         │
+│ or easyfeh --reset-conf                                                                                                                     │
+│                                                                                                                                             │
+│ easyfeh -dl     -> WARNING Deletes last used wallpaper (Wallpaper before current, Take backups before running this!)                        │
+│ or easyfeh --delete-last                                                                                                                    │
+│                                                                                                                                             │
+│ easyfeh -sh     -> Prints out history                                                                                                       │
+│ or easyfeh --show-hist                                                                                                                      │
+│                                                                                                                                             │
+│ easyfeh -sd     -> Prints out all the wallpapers downloaded from internet (If any)                                                          │
+│ or easyfeh --show-down                                                                                                                      │
+│                                                                                                                                             │
+│ easyfeh -sc     -> Prints out the path to the current wallpaper (last used, requires wallpaper history to be turned on)                     │
+│ or easyfeh --show-curr                                                                                                                      │
+│                                                                                                                                             │
+│ easyfeh -gc <amount>      -> Prints out dominant colors from an image (RGB values)                                                          │
+│                                                                                                                                             │
+│ easyfeh -gd     -> Prints out the most dominant from an image (RGB values)                                                                  │
+│ or easyfeh --get-dominant                                                                                                                   │
+│                                                                                                                                             │
+│ easyfeh -d     -> Download wallpapers(Doesn't set them)                                                                                     │
+│ or easyfeh --download                                                                                                                       │
+│                                                                                                                                             │
+│ easyfeh -d <amount> -q <query> -s <source>       -> Download wallpapers (Doesn't set them)                                                  │
+│ or easyfeh --query <query> --source <source>                                                                                                │
+│                                                                                                                                             │
+│ (Optional arguments: -q, -s ; If not specified, it will check configuration)(Source options: wallhaven(default), unsplash)                  │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
-    easyfeh -restore
-    or easyfeh -res          -> Sets the wallpaper which was last used (Sets random if no history is saved,
-                                needs random to be enabled in that case)
-
-    easyfeh -prev            
-    or easyfeh -p            -> Sets previous wallpaper (requires wallpaper history to be turned on)
-
-    easyfeh -next            
-    or easyfeh -n            -> Sets next wallpaper (requires wallpaper history to be turned on)
-
-    easyfeh -random          
-    or easyfeh -r            -> Sets a random wallpaper (directory for random wallpaper must be configured 
-                                or internet wallpapers should be turned on)
-
-    easyfeh -random          
-            -use-internet 
-    or easyfeh -r -ui        -> Sets a random wallpaper from the internet
-
-    easyfeh -random          
-            -use-down
-    or easyfeh -r -ud        -> Sets a random wallpaper from wallpapers downloaded from internet
-
-    easyfeh [some_img_path]  -> Sets an image as wallpaper 
-                                (supported formats : jpg, jpeg, png, pnm, tiff, bmp, gif)
-
-    easyfeh -reset-hist      
-    or easyfeh -rh           ->  WARNING! Resets the wallpaper history (Keeps the last used wallpaper,Take backups before running this!) 
-
-    easyfeh -reset-walls     
-    or easyfeh -rw           -> WARNING! Deletes all wallpapers downloaded from internet (Take backups before running this!)
-
-    easyfeh -reset-conf      
-    or easyfeh -rc           -> WARNING! Deletes Existing configuration and resets to default (Take backups before running this!)
-    
-    easyfeh -show-hist      
-    or easyfeh -sh           -> Prints out the history
-
-    easyfeh -show-down      
-    or easyfeh -sd           -> Prints out all the wallpapers downloaded from internet (If any)
-
-    easyfeh -show-curr       
-    or easyfeh -sc           -> Prints out the path to the current wallpaper (last used, requires wallpaper history to be turned on)
-
-    easyfeh -download <amount>       -> Downloads wallpapers (Doesn't set them)
-    -query <query> -source <source>        Optional arguments : -query , -source
-    or                                     If not specified, it will check the configuration.
-    easyfeh -d <amount> -q <query>         Available options for sources: wallhaven, unsplash 
-        -s <source> 
+The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.toml
 
 ```
 
