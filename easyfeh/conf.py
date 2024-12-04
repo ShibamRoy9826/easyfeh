@@ -7,7 +7,7 @@ from typing import Union
 
 from toml import dump, load
 
-version = "v0.1.3"
+version = "v0.1.4"
 username = getlogin()
 config_ = f"/home/{username}/.config"
 config_directory = config_ + "/easyfeh"
@@ -36,7 +36,6 @@ command_on_change = false # runs a command on wallpaper change, you can use it t
 notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
 notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
 command = "" # Set only if command_on_change is turned on
-autogenerate_palette = false # Automatically create a palette on wallpaper change
 
 [palette]
 save_palette = true  # Saves the requested palette from -gc command, to a txt file, where each line is in the format: (R,G,B)       #hex
@@ -44,12 +43,13 @@ palette_path = "/home/{username}/.config/easyfeh/palette.txt" # Where to keep th
 dominant_color_quality = 6 # (10 is highest, and 1 is the least, smaller values take less time, but at a cost of quality)
 general_palette_copy = true # Generates another copy of the palette with values like fg, bg, primary, and secondary
 complete_palette_path = "/home/{username}/.config/easyfeh/full_palette.txt" # Where to store the newly generated complete palette?
+autogenerate_palette = false # Automatically create a palette on wallpaper change
 
 [effects]
 enabled= false
-type="gaussian_blur" # Available options include "gaussian_blur", "blur","rank_filter","sharpen","contour","detail","emboss","min_filter","max_filter","smooth","smooth_more","box_blur","median_filter"
+type="gaussian_blur" # Available options include "gaussian_blur", "blur","grayscale","rank_filter","sharpen","contour","detail","emboss","min_filter","max_filter","smooth","smooth_more","box_blur","median_filter"
 
-## No need to change if you're not using any of these modes or have effects disabled
+## No need to change if you're not using any of these effects 
 gaussian_blur_radius = 8
 rank_filter_size = 3
 rank_filter_rank = 1
@@ -57,6 +57,7 @@ min_filter_size = 3
 max_filter_size = 3
 box_blur_radius = 8
 median_blur_size = 5
+dim_amount = 0.5
 edited_wallpaper_directory = "/home/{username}/Pictures/easyfeh"
 
 [feh]

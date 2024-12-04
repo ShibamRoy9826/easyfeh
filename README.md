@@ -33,13 +33,20 @@ The dependencies include:
 
 - [swww](https://github.com/LGFae/swww) (Optional, only if you're on wayland)
 
+- [pillow](https://github.com/python-pillow/Pillow) (Optional, only if you need wallpaper effects feature)
+
+- [colorthief](https://github.com/fengsp/color-thief-py) (Optional, only if you want color palette generation)
+
 - [beautifulsoup4](https://pypi.org/project/beautifulsoup4/)
 
 - [toml](https://pypi.org/project/toml/)
 
 - [requests](https://pypi.org/project/requests/)
 
-- [rich]()
+- [rich](https://github.com/Textualize/rich)
+
+>[!NOTE]
+> I know colorthief isn't maintained anymore, Its just there temporarily, and I will implement something of my own when i get the time for it
 
 Although the dependencies will be automatically installed while installing the application, if you still want to install these dependencies manually, you can checkout the `requirements.txt` file. and run `pip install -r requirements.txt`
 If you want to use something other than feh or swww, you can do that by enabling `other` in the configuration file, and setting the cmd parameter
@@ -88,10 +95,8 @@ The configuration file for EasyFeh can be found at `$HOME/.config/easyfeh/config
 Its well-commented with explaination of each parameter. Here's the default configuration file of EasyFeh
 
 ```text
-
 [wallpaper]
 wallpaper_directory= "/home/{username}/Pictures"
-random = false # sets random wallpapers from wallpaper_directory
 remember_wallpaper = true # Saves to history 
 wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
 
@@ -112,7 +117,6 @@ command_on_change = false # runs a command on wallpaper change, you can use it t
 notif_message = "Wallpaper Changed!" # Notification heading (only if notify_on_change is turned on)
 notif_body = "Wallpaper has been set to :f: " # Notification body (only if notify_on_change is turned on), :f: get's replaced by the image's path
 command = "" # Set only if command_on_change is turned on
-autogenerate_palette = false # Automatically create a palette on wallpaper change
 
 [palette]
 save_palette = true  # Saves the requested palette from -gc command, to a txt file, where each line is in the format: (R,G,B)       #hex
@@ -120,6 +124,22 @@ palette_path = "/home/{username}/.config/easyfeh/palette.txt" # Where to keep th
 dominant_color_quality = 6 # (10 is highest, and 1 is the least, smaller values take less time, but at a cost of quality)
 general_palette_copy = true # Generates another copy of the palette with values like fg, bg, primary, and secondary
 complete_palette_path = "/home/{username}/.config/easyfeh/full_palette.txt" # Where to store the newly generated complete palette?
+autogenerate_palette = false # Automatically create a palette on wallpaper change
+
+[effects]
+enabled= false
+type="gaussian_blur" # Available options include "gaussian_blur", "blur","grayscale","rank_filter","sharpen","contour","detail","emboss","min_filter","max_filter","smooth","smooth_more","box_blur","median_filter"
+
+## No need to change if you're not using any of these effects 
+gaussian_blur_radius = 8
+rank_filter_size = 3
+rank_filter_rank = 1
+min_filter_size = 3
+max_filter_size = 3
+box_blur_radius = 8
+median_blur_size = 5
+dim_amount = 0.5
+edited_wallpaper_directory = "/home/{username}/Pictures/easyfeh"
 
 [feh]
 options = "--bg-fill" # Feh options
@@ -138,7 +158,6 @@ cmd = ""
 [internal]
 # Current Wallpaper index in the history
 wall_index = -1
-
 ```
 
 <h2>
@@ -222,11 +241,9 @@ The configuration file for easyfeh can be found at $HOME/.config/easyfeh/config.
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
 ## To-Do 🛠️
-- Fetch wallpapers faster with wallhaven API
-- Option for API keys
+- Fix Wallhaven API usage(It does'nt work well atm)
 - Configuration verifier
 - Easy to switch wallpaper collections/themes
-- Wallpaper effects (blur, dim ,etc..)
 - A rust variant of the same project :) (Might take some time, I am learning about rust now)
 
 ## Known bugs 🐞
