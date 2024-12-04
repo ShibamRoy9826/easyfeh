@@ -39,6 +39,8 @@ The dependencies include:
 
 - [requests](https://pypi.org/project/requests/)
 
+- [rich]()
+
 Although the dependencies will be automatically installed while installing the application, if you still want to install these dependencies manually, you can checkout the `requirements.txt` file. and run `pip install -r requirements.txt`
 If you want to use something other than feh or swww, you can do that by enabling `other` in the configuration file, and setting the cmd parameter
 

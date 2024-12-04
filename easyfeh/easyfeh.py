@@ -28,7 +28,6 @@ class ArgP(ArgumentParser):
             cmd_lines=[]
             hlp=action.help
             if hlp=="":
-
                 ## Exceptions to be handled manually
                 if "-ui" in opts:
                     s="[bold]easyfeh -r -ui[/bold]       -> [green]Sets a random wallpaper from the internet[/green]\nor [bold]easyfeh --random --use-internet[/bold]"

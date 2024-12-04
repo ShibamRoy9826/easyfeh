@@ -15,7 +15,7 @@ setup(
     version="0.1.3",
     description="An easy to use feh wrapper with cool features",
     author="Shibam Roy",
-    author_email="shibamroy9826@gmail.com",
+    author_email="royshibam9826@gmail.com",
     url="https://github.com/ShibamRoy9826/easyfeh",
     packages=find_packages(),  
     install_requires=readRequirements(),

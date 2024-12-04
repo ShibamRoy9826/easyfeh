@@ -16,7 +16,6 @@ history_path = config_directory + "/history.txt"
 default_config = f"""
 [wallpaper]
 wallpaper_directory= "/home/{username}/Pictures"
-random = false # sets random wallpapers from wallpaper_directory
 remember_wallpaper = true # Saves to history 
 wallpaper_history_limit = 50 # history limit, history resets automatically once this limit exceeds
 
@@ -45,6 +44,20 @@ palette_path = "/home/{username}/.config/easyfeh/palette.txt" # Where to keep th
 dominant_color_quality = 6 # (10 is highest, and 1 is the least, smaller values take less time, but at a cost of quality)
 general_palette_copy = true # Generates another copy of the palette with values like fg, bg, primary, and secondary
 complete_palette_path = "/home/{username}/.config/easyfeh/full_palette.txt" # Where to store the newly generated complete palette?
+
+[effects]
+enabled= false
+type="gaussian_blur" # Available options include "gaussian_blur", "blur","rank_filter","sharpen","contour","detail","emboss","min_filter","max_filter","smooth","smooth_more","box_blur","median_filter"
+
+## No need to change if you're not using any of these modes or have effects disabled
+gaussian_blur_radius = 8
+rank_filter_size = 3
+rank_filter_rank = 1
+min_filter_size = 3
+max_filter_size = 3
+box_blur_radius = 8
+median_blur_size = 5
+edited_wallpaper_directory = "/home/{username}/Pictures/easyfeh"
 
 [feh]
 options = "--bg-fill" # Feh options
