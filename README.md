@@ -11,19 +11,18 @@ written with ❤️ in Python :)
 - Allows users to fetch wallpapers from [unsplash](https://unsplash.com/) and [wallhaven](https://wallhaven.cc/)
 - Also works in wayland but uses [swww](https://github.com/LGFae/swww) instead of feh by default
 - Users can use any other wallpaper engine if they don't want to use swww or feh
+- It can generated palettes from the current wallpaper
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
 ## What's New ❔
 
-- It can now grab colors from the current wallpaper!
+- It can now apply effects to your wallpaper such as dim, grayscale, blur,etc!
 - Better outputs, coloured output is beautiful isn't it?
-- A palette section in the config file, more power to the users :)
+- An effects section in the config file, more power to the users :)
 
 ## Demo
-This is a little old, since then many changes have been made.. (Will soon update it, when i get the time)
-
-[My Post On r/unixporn](https://www.reddit.com/r/unixporn/comments/1guwilk/oc_created_a_wallpaper_managing_application/)
+[Drive Link](https://drive.google.com/file/d/1jQIqvLqMqC2AbFPMbpbQHRxuLqS5eNpg/view?usp=sharing)
 
 ## Dependencies
 
