@@ -111,7 +111,7 @@ supported_formats = [
 
 def generateConf() -> None:
     if not "easyfeh" in listdir(config_):
-        makedirs(path.join(config_, "/easyfeh"))
+        makedirs(config_+"/easyfeh")
         with open(config_path, "w") as f:
             f.write(default_config)
         with open(path.join(config_directory, "history.txt"), "w") as f:
