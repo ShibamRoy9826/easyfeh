@@ -22,7 +22,7 @@ written with ❤️ in Python :)
 - An effects section in the config file, more power to the users :)
 
 ## Demo
-[Drive Link](https://drive.google.com/file/d/1jQIqvLqMqC2AbFPMbpbQHRxuLqS5eNpg/view?usp=sharing)
+[Video Link](https://cloud-3q71ag430-hack-club-bot.vercel.app/0easyfeh.mp4)
 
 ## Dependencies
 
