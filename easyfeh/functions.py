@@ -10,6 +10,8 @@ from .webscraper import Downloader
 
 c = Console()
 
+def showErr(msg):
+    c.print(f"[red bold]Error:[/red bold] {msg}")
 ## Config related Functions ##========================================================================================
 
 
@@ -73,68 +75,98 @@ def setConf(conf) -> None:
 
 
 def getConf(section, var):
-    with open(config_path, "r") as f:
-        config = load(f)
-    return config[section][var]
-
+    try:
+        with open(config_path, "r") as f:
+            config = load(f)
+        return config[section][var]
+    except (KeyError,FileNotFoundError):
+        showErr(f"Unable to find {var}, in {section} section of the configuration")
+        return None
 
 def returnSource() -> int:
-    return int(getConf("internet", "image_source").lower() != "unsplash")
+    try:
+        s=getConf("internet", "image_source").lower()
+        if s=="unsplash":
+            return 0
+        else:
+            return 1
 
+    except AttributeError:
+        return 1
 
 def returnSourceParam(param: str) -> int:
     return int(param.lower() != "unsplash")
 
 
 def resetHistory(index: int, nothing=False) -> None:
+
     if nothing:
         with open(history_path, "w") as fl:
             fl.write("")
     else:
-        with open(history_path, "r") as f:
-            last = f.readlines()[index]
-        with open(history_path, "w") as fl:
-            fl.write(last)
+        try:
+            with open(history_path, "r") as f:
+                last = f.readlines()[index]
 
+            with open(history_path, "w") as fl:
+                fl.write(last)
+
+        except (FileNotFoundError,IndexError):
+            showErr("Unable to fetch last used wallpaper, setting entire history")
+            with open(history_path, "w") as fl:
+                fl.write("")
 
 def resetDownloaded() -> None:
     try:
         with open(history_path, "r") as f:
             hist = f.readlines()
-            lastUsed = hist[int(getConf("internal", "wall_index"))]
-        toRemove = []
-        for img in listdir(getConf("internet", "wallpaper_save_directory")):
-            if img in lastUsed:
-                pass
+            wallInd=getConf("internal", "wall_index")
+            if wallInd!=None:
+                lastUsed = hist[int(wallInd)]
             else:
-                toRemove.append(
-                    path.join(getConf("internet", "wallpaper_save_directory"), img)
-                )
-        for i in toRemove:
-            remove(i)
-    except (FileNotFoundError, IndexError):
-        for img in listdir(getConf("internet", "wallpaper_save_directory")):
-            remove(path.join(getConf("internet", "wallpaper_save_directory"), img))
+                lastUsed = ""
 
+        toRemove = []
+        wallDir=getConf("internet", "wallpaper_save_directory")
+        if wallDir!=None:
+            for img in listdir(wallDir):
+                if img not in lastUsed:
+                    toRemove.append(
+                        path.join(wallDir, img)
+                    )
+            for i in toRemove:
+                remove(i)
+        else:
+            showErr("Couldn't find wallpaper_save_directory in your config, so deleting nothing...")
+    except (FileNotFoundError, IndexError):
+        wallDir=getConf("internet", "wallpaper_save_directory")
+        if wallDir!=None:
+            for img in listdir():
+                remove(path.join(getConf("internet", "wallpaper_save_directory"), img))
+        else:
+            showErr("Couldn't find wallpaper_save_directory in your config, so deleting nothing...")
 
 def deleteLast() -> None:
     try:
         with open(history_path, "r") as f:
             hist = f.readlines()
-            ind = int(getConf("internal", "wall_index")) - 1
-            lastUsed = hist[ind].replace("\n", "")
-            hist.pop(ind)
-            remove(lastUsed)
+            wallInd=getConf("internal", "wall_index") 
+            if wallInd!=None:
+                ind = int(wallInd) - 1
+                lastUsed = hist[ind].replace("\n", "")
+                hist.pop(ind)
+                remove(lastUsed)
+            else:
+                showErr("Couldn't find the last wallpaper, unable to delete :(")
         a = ""
         for i in hist:
-            a += i
+            a += i # newline character already included
         with open(history_path, "w") as f:
             f.write(a)
+
         print("Done!")
-    except:
-        c.print(
-            "[red]Error:[/red] unable to delete, maybe its no longer in the history..."
-        )
+    except (FileNotFoundError, IndexError):
+        showErr("Unable to delete, maybe its no longer in the history, or the history doesn't exist...")
 
 
 def appendHistory(p: str) -> None:
@@ -143,13 +175,22 @@ def appendHistory(p: str) -> None:
             with open(history_path, "r") as fl:
                 a = fl.readlines()
                 last = a[-1]
-                if len(a) >= int(getConf("wallpaper", "wallpaper_history_limit")):
-                    resetHistory(int(getConf("internal", "wall_index")), nothing=True)
+                limit=getConf("wallpaper", "wallpaper_history_limit")
+                Ind=getConf("internal", "wall_index")
+                if limit!=None and Ind!=None:
+                    if len(a) >= int(limit):
+                        resetHistory(int(Ind), nothing=True)
+                else:
+                    showErr("Couldn't read wallpaper_history_limit, or wall_index")
         except IndexError:
             last = ""
-        with open(history_path, "a") as f:
-            if p + "\n" != last:
-                f.write(p + "\n")
+
+        try:
+            with open(history_path, "a") as f:
+                if p + "\n" != last:
+                    f.write(p + "\n")
+        except FileNotFoundError:
+            showErr("Couldn't save to history, history file doesn't exist!")
 
 
 ## Additional functionalities ##=========================================================================================
@@ -157,28 +198,29 @@ def appendHistory(p: str) -> None:
 
 def sendNotif(path: str) -> None:
     heading = getConf("triggers", "notif_message")
-    body = getConf("triggers", "notif_body").replace(":f:", path)
-    run(f"""notify-send "{heading}" "{body}" """, shell=True, capture_output=False)
+    body = getConf("triggers", "notif_body")
+    if heading!=None or body!=None:
+        body=body.replace(":f:", path)
+        run(f"""notify-send "{heading}" "{body}" """, shell=True, capture_output=False)
+    else:
+        showErr("Couldn't find either of notif_body, or notif_message")
 
 
 def runOnChange() -> None:
     cmd = getConf("triggers", "command")
-    if cmd != "":
+    if cmd != "" or cmd!= None:
         run(cmd, shell=True, capture_output=False)
     else:
         c.print(
             "[red underline]Warning[/red underline]: Check your configuration plz, either disable command_on_change or set a valid command!"
         )
 
-
-
 ## Wallpaper related functions ##========================================================================================
 
 def applyEffect(imgPath:str,save_path:str) -> None:
     t=getConf("effects","type").lower()
-
     try:
-        from PIL import Image, ImageFilter,ImageEnhance
+        from PIL import Image, ImageEnhance, ImageFilter
         img=Image.open(imgPath)
 
         if t=="blur":
@@ -215,38 +257,35 @@ def applyEffect(imgPath:str,save_path:str) -> None:
         res.save(save_path)
 
     except ImportError:
-        c.print("[bold red]Error:[/bold red] Pillow module is not installed! You need to install it to use this feature!")
-
-
-
-    
+        showErr("Pillow module is not installed! You need to install it to use this feature!")
 
 
 def getPalette(amount=4, save_palette=False, general_palette=False) -> None:
     try:
         from colorthief import ColorThief
+        fl = showCurrent(show_error=True)
+        if fl!=None:
+            img = ColorThief(fl)
+            c.print("[bold yellow]Generating palette...[/bold yellow]")
+            palette = img.get_palette(color_count=amount)
 
-        fl = showCurrent(show_error=False)
-        img = ColorThief(fl)
-        c.print("[bold yellow]Generating palette...[/bold yellow]")
-        palette = img.get_palette(color_count=amount)
+            c.print("[bold green]Done![/bold green]")
 
-        c.print("[bold green]Done![/bold green]")
+            for i in palette:
+                h = rgbToHex(i)
+                c.print(h, style=f"{h}")
 
-        for i in palette:
-            h = rgbToHex(i)
-            c.print(h, style=f"{h}")
+            if save_palette:
+                writePalette(palette)
+                c.print("[green]Saved palette![/green]")
 
-        if save_palette:
-            writePalette(palette)
-            c.print("[green]Saved palette![/green]")
-        if general_palette:
-            writePalette(palette, general=True)
-            c.print("[green]Saved general palette![/green]")
+            if general_palette:
+                writePalette(palette, general=True)
+                c.print("[green]Saved general palette![/green]")
 
     except ImportError:
-        c.print(
-            "[bold red]Error:[/bold red] colorthief module is not installed! You need to install it to use this feature!"
+        showErr(
+            "colorthief module is not installed! You need to install it to use this feature!"
         )
 
 
@@ -273,23 +312,36 @@ def chooseRandom(directory: str, more=[]) -> Union[None, str]:
 def setRandom(config, use_internet=False, use_down=False) -> None:
     if use_internet:
         q = getConf("internet", "image_query")
-        if q == "":
-            d = Downloader("landscape", source=returnSource())
-            d.download(count=1)
-            setWall(d.images[0])
+        if q == "" or q==None:
+            c.print("[yellow]Warning: [/yellow] No image query mentioned in config file, searching for 'landscape' pics ")
+            try:
+                d = Downloader("landscape", source=returnSource())
+                d.download(count=1)
+                setWall(d.images[0])
+            except:
+                showErr("You either don't have an active internet connection, or you're making too many requests together!")
         else:
-            d = Downloader(q, source=returnSource())
-            d.download(count=1)
-            setWall(d.images[0])
+            try:
+                d = Downloader(q, source=returnSource())
+                d.download(count=1)
+                setWall(d.images[0])
+            except:
+                showErr("You either don't have an active internet connection, or you're making too many requests together!")
     elif use_down:
+
         if config["internet"]["use_saved"]:
-            moreDirs = [config["internet"]["wallpaper_save_directory"]]
+            wallDir=config["internet"]["wallpaper_save_directory"]
+            if wallDir!=None:
+                moreDirs = [wallDir]
+            else:
+                moreDirs = []
         else:
             moreDirs = []
 
-        randomWall = chooseRandom("", more=moreDirs)
+        # randomWall = chooseRandom("", more=moreDirs)
+        randomWall = chooseRandom(moreDirs[0], [])
         if randomWall == None:
-            print("Found no proper images, fetching from the internet...")
+            c.print("[yellow bold]Warning[/yellow bold]: Found no proper images, fetching from the internet...")
             setRandom(config, use_internet=True)
         else:
             config["internal"]["wall_index"] = -1
@@ -298,13 +350,23 @@ def setRandom(config, use_internet=False, use_down=False) -> None:
 
     else:
         if config["internet"]["use_saved"]:
-            moreDirs = [config["internet"]["wallpaper_save_directory"]]
+            wallDir=config["internet"]["wallpaper_save_directory"]
+            if wallDir!=None:
+                moreDirs = [wallDir]
+            else:
+                moreDirs = []
         else:
-            moreDirs = []
+            moreDirs=[]
 
-        randomWall = chooseRandom(
-            config["wallpaper"]["wallpaper_directory"], more=moreDirs
-        )
+        wallD=config["wallpaper"]["wallpaper_directory"]
+        if wallD!=None:
+            randomWall = chooseRandom(
+                wallD, more=moreDirs
+            )
+        else:
+            showErr("wallpaper_directory is not set! please set that up")
+            randomWall=None
+
         if randomWall == None:
             print("Found no proper images, fetching from the internet...")
             setRandom(config, use_internet=True)
@@ -320,31 +382,32 @@ def setWall(p: str, save=True) -> None:
     if path.isfile(p):
         if getConf("effects","enabled"):
             d=getConf("effects","edited_wallpaper_directory")
-            p_name=p.split("/")[-1].split(".")
+            if d==None or d=="":
+
+                c.print("[yellow bold]Warning[/yellow bold]: edited_wallpaper_directory not found, using ~/Pictures/easyfeh/edited")
+                d=path.expanduser("~/Pictures/easyfeh/edited")
+            
+            p_name=path.splitext(path.basename(p))
             newImg=path.join(d,p_name[0]+"_modified."+p_name[1])
             applyEffect(p,newImg)
             p=newImg
 
         if getConf("other", "enabled"):
-
             cmd = getConf("other", "cmd").replace(":f:", p)
             run(f"{cmd}", shell=True, capture_output=False)
         else:
 
             if getenv("XDG_SESSION_TYPE") == "x11":
                 options = getConf("feh", "options")
-
                 run(f"feh {options} {p}", shell=True, capture_output=False)
             else:
                 options = getConf("swww", "options")
-                
-
                 run(f"swww img {p} {options}", shell=True, capture_output=False)
 
         if save and getConf("wallpaper", "remember_wallpaper"):
             appendHistory(p)
 
-        print("Done! Wallpaper has been set:)")
+        c.print("[green]Done! Wallpaper has been set:)[/green]")
 
         if getConf("triggers", "notify_on_change"):
             sendNotif(p)
@@ -357,8 +420,8 @@ def setWall(p: str, save=True) -> None:
 
 
     else:
-        c.print(
-            "[bold red]Error:[/bold red] Invalid filetype, Are you sure that its an image?"
+        showErr(
+            "Invalid file, Are you sure that its an image? or if it even exists?"
         )
 
 
@@ -378,8 +441,8 @@ def printHistory() -> None:
                     print(i, end="")
             c.print("[blue]Total wallpapers in history: [/blue]", l)
     except:
-        c.print(
-            "[red]Error:[/red] Wasn't able to fetch history, are you sure history is turned on in the config file?"
+        showErr(
+            "Wasn't able to fetch history, are you sure history is turned on in the config file?"
         )
 
 
@@ -387,26 +450,41 @@ def listInstalled() -> None:
     try:
         saveDir = getConf("internet", "wallpaper_save_directory")
         count = 0
-        for i in listdir(saveDir):
-            print(path.join(saveDir, i))
-            count += 1
-        c.print("\n[blue]Total downloaded wallpapers: [/blue]", count)
+        if saveDir!=None and path.exists(saveDir): 
+            for i in listdir(saveDir):
+                print(path.join(saveDir, i))
+                count += 1
+            c.print("\n[blue]Total downloaded wallpapers: [/blue]", count)
+        else:
+            showErr(
+                "Wasn't able to fetch the wallpapers... are you sure that the directory is configured properly in the config file?"
+            )
+
     except:
-        c.print(
-            "[red]Error:[/red] Wasn't able to fetch the wallpapers... are you sure that the directory is configured properly in the config file?"
+        showErr(
+            "Wasn't able to fetch the wallpapers... are you sure that the directory is configured properly in the config file?"
         )
 
 
 def showCurrent(show_error=True) -> Union[str,None]:
     try:
         with open(history_path, "r") as f:
-            curr = f.readlines()[int(getConf("internal", "wall_index"))].replace(
-                "\n", ""
-            )
-            return curr
-    except:
+            Ind=getConf("internal", "wall_index")
+            if Ind!=None:
+                curr = f.readlines()[int(Ind)].replace(
+                    "\n", ""
+                )
+                return curr
+            else:
+                if show_error:
+                    showErr(
+                        "Wallpaper not found, are you sure that wallpaper history is turned on?"
+                    )
+                return None
+
+    except (FileNotFoundError,IndexError):
         if show_error:
-            c.print(
-                "[red]Error:[/red] Wallpaper not found, are you sure that wallpaper history is turned on?"
+            showErr(
+                "Wallpaper not found, are you sure that wallpaper history is turned on?"
             )
         return None
