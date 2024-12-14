@@ -7,7 +7,7 @@ from typing import Union
 
 from toml import dump, load
 
-version = "v0.1.4"
+version = "v0.1.4 (2nd release)"
 username = getlogin()
 config_ = f"/home/{username}/.config"
 config_directory = config_ + "/easyfeh"
